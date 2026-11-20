@@ -22,7 +22,7 @@
 | 방법론 내용 | 이 프로젝트 |
 |-------------|-------------|
 | aisw01 서버 SSH 접근 | 로컬 Windows PC에서 Claude Code를 실행한다 |
-| GitHub `sowiseted` 조직 | 개인 저장소를 쓴다 (로컬 저장소만 있음, GitHub 원격은 미생성) |
+| GitHub `sowiseted` 조직 | 개인 공개 저장소 `waterdog-hub/portfolio-site`를 쓴다 (origin, 2026-11-20 생성) |
 | Gemini 보조 에이전트 | 쓰지 않는다 |
 | SDLC 산출물 전체 | 정적 사이트 규모에 맞게 기획서(요구사항·결정 기록 포함) 하나로 테일러링한다. 백엔드 사례를 만들 때 사례별로 설계 문서를 둔다 |
 
