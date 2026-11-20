@@ -1,0 +1,19 @@
+# 2026-11-20 - portfolio-site - Git에서 제외할 파일
+# 파일 위치: .gitignore
+
+# 운영체제·편집기
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Claude Code 개인 설정 (launch.json은 공유)
+.claude/settings.local.json
+
+# 비밀값 (정적 사이트라 지금은 없지만 미리 막아 둔다)
+.env
+
+# 배포 도구가 만드는 폴더
+.netlify/
+.vercel/
