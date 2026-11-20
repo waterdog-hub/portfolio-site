@@ -17,3 +17,6 @@ desktop.ini
 # 배포 도구가 만드는 폴더
 .netlify/
 .vercel/
+
+# 시안 작업 도구(브레인스토밍)가 만드는 폴더
+.superpowers/
