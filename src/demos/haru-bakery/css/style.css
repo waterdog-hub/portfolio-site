@@ -11,8 +11,8 @@
   --bg-soft: #efe4d3;       /* 섹션을 번갈아 구분하는 조금 진한 크림 */
   --bg-card: #fffaf2;       /* 메뉴 카드 바탕 */
   --text: #4a3426;          /* 진갈색 (시안 A 글씨) */
-  --text-sub: #7a6352;      /* 설명 글씨 */
-  --accent: #a8682f;        /* 구운 빵 껍질 같은 갈색 */
+  --text-sub: #6f5948;      /* 설명 글씨 */
+  --accent: #8a5222;        /* 구운 빵 껍질 같은 갈색 */
   --accent-soft: #e7cfa8;   /* 밝은 빵 속 색 */
   --line: #ddcdb6;          /* 구분선 */
   --cream-on-dark: #fff8ee; /* 어두운 바탕 위 글씨·버튼 */
@@ -468,4 +468,15 @@ button:focus-visible {
 
 @media (min-width: 960px) {
   .menu__grid { grid-template-columns: repeat(3, 1fr); gap: 28px; }
+}
+
+/* 움직임을 줄이도록 설정한 방문자(멀미 등)에게는 부드러운 스크롤·전환 효과를 끈다 */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }
