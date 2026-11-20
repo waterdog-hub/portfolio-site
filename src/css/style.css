@@ -99,7 +99,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: 64px;
 }
 .logo { font-weight: 800; font-size: 18px; }
-.logo span { color: var(--accent); }
 
 .nav { display: flex; align-items: center; gap: 28px; }
 .nav a { font-size: 15px; color: var(--text-sub); }
@@ -187,7 +186,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-radius: 999px;
 }
 .price-card__name { font-size: 14px; font-weight: 800; color: var(--accent); letter-spacing: 0.04em; }
-.price-card__price { font-size: 32px; font-weight: 800; margin: 8px 0 4px; }
+/* .card p(15px, 회색)보다 우선하도록 .card를 붙여 구체성을 높인다 */
+.card .price-card__price { font-size: 32px; font-weight: 800; color: var(--text); margin: 8px 0 4px; }
 .price-card__price small { font-size: 15px; font-weight: 600; color: var(--text-sub); }
 .price-card__summary { color: var(--text-sub); font-size: 15px; margin-bottom: 20px; }
 .price-card ul { border-top: 1px solid var(--line); padding-top: 18px; margin-bottom: 24px; flex: 1; }

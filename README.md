@@ -23,4 +23,7 @@ py -3 -m http.server 8000 -d src
 
 ## 배포
 
-`src` 폴더를 Netlify Drop(app.netlify.com/drop)에 끌어다 놓거나, GitHub 저장소를 Vercel·Netlify에 연결하고 배포 폴더를 `src`로 지정합니다.
+Netlify가 이 저장소의 `main` 브랜치에 연결되어 있습니다(배포 폴더 `src`, 빌드 명령 없음). `main`에 푸시하면 자동으로 다시 배포됩니다.
+
+- 주소: https://portfolio-site-qnx5.netlify.app (자리표시를 채울 때까지 비공개)
+- 공개 범위와 주소 이름은 Netlify의 **Manage → General**에서 바꿉니다.
