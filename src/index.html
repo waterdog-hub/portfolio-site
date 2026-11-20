@@ -3,6 +3,7 @@
   2026-11-20 - portfolio-site - 외주 홍보용 원페이지 포트폴리오
   파일 위치: src/index.html
   TODO: "OO 웹스튜디오", 가격, 크몽·숨고 링크(href="#")는 자리표시다. 정해지면 바꾼다.
+  포트폴리오 스크린샷은 src/assets/에 있다 (remodel-link, itda, smart-voca). 휴대폰용은 -375.png.
 -->
 <html lang="ko">
 <head>
@@ -150,6 +151,65 @@
           <p>무엇을 만들었는지보다 어떤 문제를 어떻게 풀었는지를 보여 드립니다.</p>
         </div>
 
+        <!-- 스크린샷은 각 프로젝트를 테스트 DB와 지어낸 데이터로 띄워 찍었다 (기획 D-05) -->
+        <article class="work">
+          <div>
+            <p class="work__meta">외주 중개 웹 서비스 · 개인 프로젝트</p>
+            <h3>remodel-link 소규모 IT 외주 중개</h3>
+            <dl>
+              <dt>문제</dt>
+              <dd>소상공인은 홈페이지 수정 같은 작은 일을 맡길 곳이 마땅치 않고, 대학생 개발자는 첫 실적을 쌓을 기회가 없었습니다.</dd>
+              <dt>해결</dt>
+              <dd>의뢰 등록 → 제안 비교·선정 → 계약 → 결제 → 진행 기록 → 검수·후기를 한 흐름으로 잇고, 단계마다 지금 할 일을 보여 줍니다. 토스페이먼츠 결제(테스트)와 중단·환불 규칙까지 만들었습니다.</dd>
+              <dt>결과</dt>
+              <dd>요구사항 151건을 정리해 설계하고 핵심 흐름을 구현했습니다. 휴대폰 화면까지 포함한 자동 화면 점검 230개 항목을 통과했습니다.</dd>
+            </dl>
+            <ul class="tags">
+              <li>Python</li><li>FastAPI</li><li>SQLAlchemy</li><li>토스페이먼츠</li><li>Jinja2</li><li>반응형</li>
+            </ul>
+            <p class="work__note">비공개 저장소입니다. 상담 때 화면으로 시연해 드립니다.</p>
+          </div>
+          <div class="work__visual">
+            <div class="mock">
+              <div class="mock__bar"><i></i><i></i><i></i></div>
+              <picture>
+                <source media="(max-width: 720px)" srcset="assets/remodel-link-375.png" width="375" height="800">
+                <img class="mock__img" src="assets/remodel-link.png" width="1280" height="900" loading="lazy"
+                     alt="remodel-link 계약 화면. 선정부터 완료까지 6단계 중 진행 단계가 표시되고, 계약 내용과 진행 기록이 보인다">
+              </picture>
+            </div>
+          </div>
+        </article>
+
+        <article class="work">
+          <div>
+            <p class="work__meta">AI 웹 서비스 · 개인 프로젝트</p>
+            <h3>잇다(ITDA) 자소서·면접 AI 코치</h3>
+            <dl>
+              <dt>문제</dt>
+              <dd>자소서를 쓸 때마다 쓸 만한 경험을 다시 찾아야 했고, 자소서와 면접 준비가 따로 놀았습니다.</dd>
+              <dt>해결</dt>
+              <dd>경험을 카드로 한 번 기록해 두면 AI가 문항에 맞는 경험을 추천하고, 초안을 항목별로 코칭하고, 확정한 자소서로 꼬리질문 모의면접까지 이어 줍니다. AI 응답은 서버에서 검증한 뒤 저장합니다.</dd>
+              <dt>결과</dt>
+              <dd>React 화면과 Spring Boot 서버로 회원, 경험 카드, 코칭, 모의면접, 이력 기능을 구현하고, GitHub Actions로 테스트와 빌드를 자동화했습니다.</dd>
+            </dl>
+            <ul class="tags">
+              <li>React</li><li>Spring Boot</li><li>Java 17</li><li>MySQL</li><li>JWT</li><li>GitHub Actions</li>
+            </ul>
+            <p class="work__note">비공개 저장소입니다. 상담 때 화면으로 시연해 드립니다.</p>
+          </div>
+          <div class="work__visual">
+            <div class="mock">
+              <div class="mock__bar"><i></i><i></i><i></i></div>
+              <picture>
+                <source media="(max-width: 720px)" srcset="assets/itda-375.png" width="375" height="800">
+                <img class="mock__img" src="assets/itda.png" width="1280" height="900" loading="lazy"
+                     alt="잇다 문항 화면. AI가 경험 카드 두 개를 순위와 강조 포인트와 함께 추천하고, 아래에 초안 쓰기 칸이 있다">
+              </picture>
+            </div>
+          </div>
+        </article>
+
         <article class="work">
           <div>
             <p class="work__meta">회원제 웹 서비스 · 개인 프로젝트</p>
@@ -172,33 +232,12 @@
           <div class="work__visual">
             <div class="mock">
               <div class="mock__bar"><i></i><i></i><i></i></div>
-              <!-- TODO: 실제 화면 스크린샷을 assets/smart-voca.png로 넣고 아래 문구를 img로 바꾼다 -->
-              <div class="mock__body">smart-voca 화면 스크린샷 자리</div>
+              <picture>
+                <source media="(max-width: 720px)" srcset="assets/smart-voca-375.png" width="375" height="720">
+                <img class="mock__img" src="assets/smart-voca.png" width="1280" height="900" loading="lazy"
+                     alt="smart-voca 홈 화면. 오늘 할 일과 이어서 암기하기 버튼, 현재 일차, 전체 진행률, 최근 시험 카드가 보인다">
+              </picture>
             </div>
-          </div>
-        </article>
-
-        <article class="work work--soon">
-          <div>
-            <p class="work__meta">랜딩페이지 · 제작 예정</p>
-            <h3>동네 카페 소개 페이지</h3>
-            <p class="price-card__summary">메뉴, 영업시간, 지도, 인스타그램 연결이 들어간 반응형 한 장 페이지</p>
-            <ul class="tags"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
-          </div>
-          <div class="work__visual">
-            <div class="mock"><div class="mock__bar"><i></i><i></i><i></i></div><div class="mock__body">준비 중</div></div>
-          </div>
-        </article>
-
-        <article class="work work--soon">
-          <div>
-            <p class="work__meta">예약 시스템 · 제작 예정</p>
-            <h3>학원·미용실 예약 관리</h3>
-            <p class="price-card__summary">손님은 시간을 골라 예약하고, 사장님은 관리자 페이지에서 확인·승인하는 시스템</p>
-            <ul class="tags"><li>Python</li><li>Django</li><li>PostgreSQL</li></ul>
-          </div>
-          <div class="work__visual">
-            <div class="mock"><div class="mock__bar"><i></i><i></i><i></i></div><div class="mock__body">준비 중</div></div>
           </div>
         </article>
       </div>
@@ -231,10 +270,10 @@
           <h2>사용하는 기술</h2>
         </div>
         <div class="stack">
-          <div><h3>화면</h3><ul class="tags"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul></div>
-          <div><h3>서버</h3><ul class="tags"><li>Python</li><li>FastAPI</li><li>Django</li><li>Java</li></ul></div>
-          <div><h3>데이터베이스</h3><ul class="tags"><li>SQL</li><li>PostgreSQL</li><li>SQLite</li></ul></div>
-          <div><h3>배포 · 협업</h3><ul class="tags"><li>Git</li><li>GitHub</li><li>Netlify</li></ul></div>
+          <div><h3>화면</h3><ul class="tags"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>React</li><li>Jinja2</li></ul></div>
+          <div><h3>서버</h3><ul class="tags"><li>Python</li><li>FastAPI</li><li>Java</li><li>Spring Boot</li></ul></div>
+          <div><h3>데이터베이스</h3><ul class="tags"><li>SQL</li><li>PostgreSQL</li><li>MySQL</li><li>SQLite</li></ul></div>
+          <div><h3>결제 · 배포 · 협업</h3><ul class="tags"><li>토스페이먼츠</li><li>Git</li><li>GitHub Actions</li><li>Netlify</li></ul></div>
         </div>
       </div>
     </section>
