@@ -6,6 +6,12 @@
       "runtimeExecutable": "py",
       "runtimeArgs": ["-3", "-m", "http.server", "8000", "-d", "src"],
       "port": 8000
+    },
+    {
+      "name": "salon",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\Users\\PC2602\\salon-demo && .venv\\Scripts\\python -m uvicorn --factory web.app:create_app --app-dir src --port 8100"],
+      "port": 8100
     }
   ]
 }
