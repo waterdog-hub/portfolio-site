@@ -17,11 +17,11 @@
   --line: #d9dfeb;
   --on-navy: #ffffff;          /* 남색 바탕 위 글씨 */
   --on-navy-sub: #c5d0e6;
-  --accent-warm: #c2570c;      /* 남은 자리 강조 (주황 한 색) */
+  --accent-warm: #a84a08;      /* 남은 자리 강조 (주황 한 색) */
   --accent-warm-soft: #fdeede;
   --danger: #b3261e;
   --danger-soft: #fdecea;
-  --muted: #8591a8;            /* 마감 같은 비활성 글씨 */
+  --muted: #5f6b85;            /* 마감 같은 비활성 글씨 */
   --header-bg: rgba(255, 255, 255, 0.96);
 
   --font-body: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
@@ -263,7 +263,7 @@ ul, ol { padding: 0; list-style: none; }
 .step__title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
 .step p { color: var(--text-sub); font-size: 15px; }
 .method__photo { margin-top: 28px; }
-.method__photo img { width: 100%; max-height: 320px; object-fit: cover; border-radius: var(--radius); }
+.method__photo img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: center top; /* 아래쪽 사람 무릎이 안 보이게 위쪽 기준으로 자른다 */ border-radius: var(--radius); }
 
 /* ===== 10. P-06 폼 · P-07 완료 ===== */
 .consult__grid { display: grid; gap: 24px; }
@@ -335,8 +335,9 @@ ul, ol { padding: 0; list-style: none; }
     background: none;
     border: 0;
   }
-  .nav a { padding: 0; border: 0; }
-  .nav__cta { padding: 8px 16px; border-radius: var(--radius); background: var(--navy); color: var(--on-navy); }
+  .nav a:not(.nav__cta) { padding: 0; border: 0; }
+  /* .nav a(0,1,1)보다 세게 써야 알약 안쪽 여백이 먹는다 */
+  .nav a.nav__cta { border: 0; padding: 8px 16px; border-radius: var(--radius); background: var(--navy); color: var(--on-navy); }
 
   .section__title { font-size: 34px; }
 
