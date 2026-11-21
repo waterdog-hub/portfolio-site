@@ -56,6 +56,9 @@ ul { list-style: none; }
 a { color: inherit; }
 
 :focus-visible { outline: 3px solid var(--seal); outline-offset: 2px; }
+/* 먹색 바탕(데모 띠·바닥글)에서는 도장색 테두리가 잘 안 보여(2.5:1) 한지색으로 바꾼다 */
+.demo-band :focus-visible,
+.footer :focus-visible { outline-color: var(--paper); }
 
 [hidden] { display: none !important; } /* 클래스의 display 값이 hidden을 이기지 못하게 */
 
@@ -572,6 +575,8 @@ a { color: inherit; }
   background: var(--seal);
 }
 .btn--on-seal { color: var(--on-seal); border-color: var(--on-seal); flex: none; }
+/* 기본 포커스 테두리는 도장색이라 도장색 알림 위에서는 안 보인다. 미색으로 바꾼다 */
+.btn--on-seal:focus-visible { outline-color: var(--on-seal); }
 
 @media (min-width: 768px) {
   .owner-card { padding: 28px 32px; }
