@@ -58,6 +58,8 @@ export function openStorage(win) {
 function isValidMenu(m) {
   return m !== null && typeof m === "object"
     && typeof m.id === "string" && typeof m.name === "string"
+    && typeof m.description === "string"
+    && typeof m.updatedAt === "number" && Number.isFinite(m.updatedAt)
     && typeof m.price === "number" && Number.isFinite(m.price)
     && CATEGORIES.includes(m.category)
     && typeof m.soldOut === "boolean" && typeof m.photo === "string";
@@ -111,4 +113,96 @@ export function commit(storage, state, change) {
   if (!storage) return { ok: true, state: draft };
   if (!write(storage, draft)) return { ok: false, code: "QUOTA", state };
   return { ok: true, state: draft };
+}
+
+// ---- 메뉴·공지·백반 규칙 (commit의 change 안에서 쓰는 함수는 draft를 직접 고친다) ----
+
+// 가격 글자: 쉼표·공백을 빼고 1~999,999 정수만 받는다. "9.5"나 "구천"은 null.
+export function parsePrice(text) {
+  const t = String(text).trim().replaceAll(",", "");
+  if (!/^\d+$/.test(t)) return null;
+  const n = Number(t);
+  return n >= 1 && n <= 999999 ? n : null;
+}
+
+export function formatPrice(n) {
+  return n.toLocaleString("en-US"); // 로케일에 따라 달라지지 않도록 고정
+}
+
+// 폼 값을 검사해 어느 칸이 틀렸는지 돌려준다(화면이 그 칸에 오류를 띄운다).
+export function validateMenu(input) {
+  const name = String(input.name ?? "").trim();
+  if (name.length < 1 || name.length > 20) return { ok: false, field: "name" };
+  const price = parsePrice(input.price);
+  if (price === null) return { ok: false, field: "price" };
+  const description = String(input.description ?? "").trim();
+  if (description.length > 40) return { ok: false, field: "description" };
+  if (!CATEGORIES.includes(input.category)) return { ok: false, field: "category" };
+  return { ok: true, value: { name, price, description, category: input.category } };
+}
+
+export function addMenu(draft, value, now) {
+  if (draft.menus.length >= MAX_MENUS) return { ok: false, code: "LIMIT" };
+  const id = crypto.randomUUID();
+  draft.menus.push({ id, ...value, soldOut: false, photo: "", updatedAt: now.getTime() });
+  return { ok: true, id };
+}
+
+function findMenu(draft, id) {
+  return draft.menus.find(m => m.id === id);
+}
+
+export function updateMenu(draft, id, value, now) {
+  const m = findMenu(draft, id);
+  if (!m) return false;
+  Object.assign(m, value, { updatedAt: now.getTime() });
+  return true;
+}
+
+export function deleteMenu(draft, id) {
+  const i = draft.menus.findIndex(m => m.id === id);
+  if (i < 0) return false;
+  draft.menus.splice(i, 1);
+  return true;
+}
+
+export function setSoldOut(draft, id, soldOut, now) {
+  const m = findMenu(draft, id);
+  if (!m) return false;
+  m.soldOut = soldOut;
+  m.updatedAt = now.getTime();
+  return true;
+}
+
+export function countUploadedPhotos(state) {
+  return state.menus.filter(m => m.photo.startsWith("data:")).length;
+}
+
+// 올린 사진은 저장 용량을 쓰므로 10장까지. 이미 올린 사진을 바꾸거나 빼는 건 장수가 늘지 않아 허용한다.
+export function setPhoto(draft, id, photo, now) {
+  const m = findMenu(draft, id);
+  if (!m) return { ok: false, code: "NOT_FOUND" };
+  const adds = photo.startsWith("data:") && !m.photo.startsWith("data:");
+  if (adds && countUploadedPhotos(draft) >= MAX_UPLOADED_PHOTOS) return { ok: false, code: "PHOTO_LIMIT" };
+  m.photo = photo;
+  m.updatedAt = now.getTime();
+  return { ok: true };
+}
+
+export function setNotice(draft, text, visible) {
+  draft.notice = { text: text.trim().slice(0, 60), visible };
+}
+
+export function setTodaySet(draft, dishes, price) {
+  draft.todaySet = { dishes: dishes.trim().slice(0, 80), price };
+}
+
+// 분류 순서(CATEGORIES)로 묶고, 같은 분류 안에서는 저장된 순서(새 메뉴는 끝)를 유지한다.
+export function menusByCategory(state, category) {
+  if (category !== "all") return state.menus.filter(m => m.category === category);
+  return CATEGORIES.flatMap(c => state.menus.filter(m => m.category === c));
+}
+
+export function resetState(now) {
+  return createSeed(now);
 }

@@ -4,7 +4,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  STORAGE_KEY, LIFETIME_MS, CATEGORIES, createSeed, loadState, commit, openStorage,
+  STORAGE_KEY, LIFETIME_MS, CATEGORIES, MAX_MENUS, MAX_UPLOADED_PHOTOS, createSeed, loadState, commit, openStorage,
+  parsePrice, formatPrice, validateMenu, addMenu, updateMenu, deleteMenu, setSoldOut, setPhoto,
+  countUploadedPhotos, setNotice, setTodaySet, menusByCategory, resetState,
 } from "../../src/demos/ongi-sikdang/js/store.js";
 
 // 가짜 저장소: throwOnSet이면 쓰기가 항상 실패한다(용량 초과 흉내).
@@ -82,6 +84,8 @@ test("loadState_invalid_menu_item_resets", () => {
     m => { m.photo = null; },
     m => { m.name = 5; },
     m => { m.id = 1; },
+    m => { delete m.description; },
+    m => { m.updatedAt = "now"; },
   ];
   for (const mutate of mutations) {
     const s = structuredClone(good);
@@ -134,4 +138,111 @@ test("openStorage: localStorage가 던지면 null", () => {
   assert.equal(openStorage({ get localStorage() { throw new Error("denied"); } }), null);
   const st = fakeStorage();
   assert.equal(openStorage({ localStorage: st }), st);
+});
+
+// ---- Task 2: 메뉴·공지·백반 규칙 ----
+const PHOTO = "data:image/jpeg;base64,AAAA";
+
+test("parsePrice", () => {
+  assert.equal(parsePrice("9,000"), 9000);
+  assert.equal(parsePrice(" 9000 "), 9000);
+  assert.equal(parsePrice("999,999"), 999999);
+  for (const bad of ["구천", "0", "-500", "1000000", "9.5", ""]) assert.equal(parsePrice(bad), null);
+});
+
+test("formatPrice", () => {
+  assert.equal(formatPrice(9000), "9,000");
+  assert.equal(formatPrice(11000), "11,000");
+  assert.equal(formatPrice(500), "500");
+});
+
+test("validateMenu: 칸 이름을 돌려줌", () => {
+  const ok = { name: " 라면 ", price: "4,500", description: " 얼큰 ", category: "meal" };
+  assert.deepEqual(validateMenu(ok), { ok: true, value: { name: "라면", price: 4500, description: "얼큰", category: "meal" } });
+  assert.equal(validateMenu({ ...ok, description: "" }).ok, true);
+  assert.deepEqual(validateMenu({ ...ok, name: "  " }), { ok: false, field: "name" });
+  assert.deepEqual(validateMenu({ ...ok, name: "가".repeat(21) }), { ok: false, field: "name" });
+  assert.equal(validateMenu({ ...ok, name: "가".repeat(20) }).ok, true);
+  assert.deepEqual(validateMenu({ ...ok, price: "abc" }), { ok: false, field: "price" });
+  assert.deepEqual(validateMenu({ ...ok, description: "가".repeat(41) }), { ok: false, field: "description" });
+  assert.deepEqual(validateMenu({ ...ok, category: "drink" }), { ok: false, field: "category" });
+});
+
+test("addMenu: 41번째는 LIMIT", () => {
+  const d = createSeed(NOW);
+  const value = { name: "새메뉴", price: 5000, description: "", category: "extra" };
+  let last;
+  while (d.menus.length < MAX_MENUS) last = addMenu(d, value, NOW);
+  assert.equal(d.menus.length, MAX_MENUS);
+  const r = addMenu(d, value, NOW);
+  assert.deepEqual(r, { ok: false, code: "LIMIT" });
+  assert.equal(d.menus.length, MAX_MENUS);
+  const m = d.menus.find(x => x.id === last.id);
+  assert.equal(m.soldOut, false);
+  assert.equal(m.photo, "");
+  assert.equal(m.updatedAt, NOW.getTime());
+});
+
+test("setSoldOut·updateMenu·deleteMenu", () => {
+  const d = createSeed(NOW);
+  const id = d.menus[0].id;
+  const later = new Date(NOW.getTime() + 1000);
+  assert.equal(setSoldOut(d, id, true, later), true);
+  assert.equal(d.menus[0].soldOut, true);
+  assert.equal(d.menus[0].updatedAt, later.getTime());
+  assert.equal(updateMenu(d, id, { name: "바뀜", price: 1234, description: "d", category: "set" }, later), true);
+  assert.equal(d.menus[0].name, "바뀜");
+  assert.equal(d.menus[0].category, "set");
+  assert.equal(d.menus[0].soldOut, true); // 다른 칸은 유지
+  assert.equal(deleteMenu(d, id), true);
+  assert.equal(d.menus.some(m => m.id === id), false);
+  assert.equal(setSoldOut(d, "nope", true, later), false);
+  assert.equal(updateMenu(d, "nope", { name: "a", price: 1, description: "", category: "meal" }, later), false);
+  assert.equal(deleteMenu(d, "nope"), false);
+});
+
+test("setPhoto: 11번째 올린 사진은 PHOTO_LIMIT, 이미 올린 사진을 바꾸는 건 허용, 빈 값은 빼기", () => {
+  const d = createSeed(NOW);
+  assert.equal(countUploadedPhotos(d), 0); // assets/ 사진은 세지 않는다
+  for (let i = 0; i < MAX_UPLOADED_PHOTOS; i++) assert.deepEqual(setPhoto(d, d.menus[i].id, PHOTO, NOW), { ok: true });
+  assert.equal(countUploadedPhotos(d), MAX_UPLOADED_PHOTOS);
+  assert.deepEqual(setPhoto(d, d.menus[10].id, PHOTO, NOW), { ok: false, code: "PHOTO_LIMIT" });
+  assert.equal(d.menus[10].photo, "");
+  assert.deepEqual(setPhoto(d, d.menus[0].id, PHOTO + "B", NOW), { ok: true }); // 교체는 허용
+  assert.equal(d.menus[0].photo, PHOTO + "B");
+  assert.equal(countUploadedPhotos(d), MAX_UPLOADED_PHOTOS);
+  assert.deepEqual(setPhoto(d, d.menus[0].id, "", NOW), { ok: true }); // 빼기
+  assert.equal(d.menus[0].photo, "");
+  assert.equal(countUploadedPhotos(d), MAX_UPLOADED_PHOTOS - 1);
+  assert.deepEqual(setPhoto(d, d.menus[10].id, PHOTO, NOW), { ok: true });
+});
+
+test("setNotice·setTodaySet 자르기", () => {
+  const d = createSeed(NOW);
+  setNotice(d, "  " + "가".repeat(70) + "  ", false);
+  assert.equal(d.notice.text, "가".repeat(60));
+  assert.equal(d.notice.visible, false);
+  setNotice(d, "  쉬는 날  ", true);
+  assert.equal(d.notice.text, "쉬는 날");
+  setTodaySet(d, "나".repeat(100), 8000);
+  assert.equal(d.todaySet.dishes, "나".repeat(80));
+  assert.equal(d.todaySet.price, 8000);
+});
+
+test("menusByCategory: 새 메뉴는 그 분류 끝", () => {
+  const d = createSeed(NOW);
+  const seedStews = d.menus.filter(m => m.category === "stew").map(m => m.name);
+  addMenu(d, { name: "부대찌개", price: 9000, description: "", category: "stew" }, NOW);
+  assert.deepEqual(menusByCategory(d, "stew").map(m => m.name), [...seedStews, "부대찌개"]);
+  const all = menusByCategory(d, "all");
+  assert.equal(all.length, d.menus.length);
+  const cats = all.map(m => CATEGORIES.indexOf(m.category));
+  assert.deepEqual(cats, [...cats].sort((a, b) => a - b)); // 분류 순서로 묶임
+  assert.equal(menusByCategory(d, "meal").every(m => m.category === "meal"), true);
+});
+
+test("resetState: 새 기본 데이터", () => {
+  const r = resetState(NOW);
+  assert.equal(r.createdAt, NOW.getTime());
+  assert.equal(r.menus.length, createSeed(NOW).menus.length);
 });
