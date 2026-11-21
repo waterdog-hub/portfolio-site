@@ -18,6 +18,9 @@
   --line: #b9ab92;         /* 구분선·테두리 (글씨가 아니라 대비 규칙 대상 아님, 점선) */
   --map-bg: #e6dcc7;       /* 약도 바탕 */
   --header-bg: rgba(246, 241, 231, 0.96);
+  --card: #fffdf8;         /* 사장님 화면 카드·입력 칸 바탕 (한지보다 밝게) */
+  --field-line: #5c534a;   /* 입력 칸 테두리: 바탕과 3:1 이상이어야 칸이 보인다 */
+  --backdrop: rgba(43, 38, 34, 0.55); /* 수정 창 뒤를 어둡게 */
 
   --font-title: "Noto Serif KR", serif;
   --font-body: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
@@ -359,7 +362,228 @@ a { color: inherit; }
 .footer__links a { text-decoration: underline; text-underline-offset: 3px; }
 .footer__back { text-decoration: none; font-weight: 700; }
 
-/* ===== 12. 넓은 화면 (768px 이상) ===== */
+/* ===== 12. 사장님 화면 (owner.html) ===== */
+.btn--sm { padding: 0 14px; font-size: 14px; } /* 글씨만 작게, 누르는 높이(44px)는 그대로 */
+.btn:disabled { opacity: 0.6; cursor: wait; }
+.logo__sub { font-family: var(--font-body); font-size: 15px; font-weight: 700; color: var(--ink-sub); letter-spacing: 0; }
+
+.owner { padding: 32px 0 var(--section-gap); }
+.owner .section__title { margin-bottom: 8px; }
+.owner__lead { color: var(--ink-sub); margin-bottom: 20px; }
+
+.owner-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.owner-card--plain { background: transparent; border-style: dashed; }
+.owner-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.owner-card__title { font-family: var(--font-title); font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+.owner-card__head .owner-card__title { margin-bottom: 0; }
+.owner__count { margin: 8px 0 4px; font-size: 14px; color: var(--ink-sub); }
+
+/* 입력 칸 */
+.owner-form { display: grid; gap: 14px; justify-items: start; }
+.field { display: grid; gap: 4px; width: 100%; }
+.field__label { font-weight: 700; padding: 0; }
+.field__hint { font-size: 13px; font-weight: 400; color: var(--ink-sub); }
+.field__input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 8px 12px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--field-line);
+  border-radius: 4px;
+}
+.field__input--price { max-width: 12em; }
+.field__input[aria-invalid="true"] { border: 2px solid var(--seal); }
+.field__error { font-size: 14px; font-weight: 700; color: var(--seal); }
+
+/* 체크 칸은 글자까지 눌리게 label로 감싸고 높이를 44px로 */
+.check { display: inline-flex; align-items: center; gap: 10px; min-height: var(--tap); cursor: pointer; }
+.check input { width: 22px; height: 22px; margin: 0; accent-color: var(--seal); }
+
+/* M-03 메뉴 목록: 분류마다 묶는다 */
+.m-group { margin-top: 20px; }
+.m-group__title { font-size: 16px; font-weight: 700; color: var(--ink-sub); margin-bottom: 4px; }
+.m-group__empty { padding: 12px 0; color: var(--ink-sub); border-top: 1px dashed var(--line); }
+.m-list { border-top: 1px dashed var(--line); }
+
+/* 휴대폰: 사진·이름 한 줄, 스위치·버튼 한 줄. 넓은 화면에서는 한 줄로 편다 */
+.m-row {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 12px 8px;
+  border-bottom: 1px dashed var(--line);
+  transition: background-color 0.3s;
+}
+.m-row.is-flash { background: var(--paper-deep); }
+.m-row__thumb { width: 56px; height: 56px; }
+.m-row__photo { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; }
+.m-row__nophoto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--ink-sub);
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+}
+.m-row__body { min-width: 0; }
+.m-row__name { font-family: var(--font-title); font-size: 17px; font-weight: 700; line-height: 1.4; overflow-wrap: anywhere; }
+.m-row__price { font-weight: 700; }
+.m-row__flash { font-size: 14px; font-weight: 700; color: var(--seal); }
+.m-row.is-soldout .m-row__photo { opacity: 0.45; filter: grayscale(0.6); }
+.m-row.is-soldout .m-row__won { color: var(--ink-sub); text-decoration: line-through; }
+.m-row__controls { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* 품절 스위치: 버튼 전체(44px 이상)가 누르는 영역이고, 안쪽 막대는 모양만 보여 준다 */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: var(--tap);
+  min-height: var(--tap);
+  padding: 0 10px 0 4px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.switch__track {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 26px;
+  background: var(--card);
+  border: 2px solid var(--field-line);
+  border-radius: 999px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.switch__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: var(--field-line);
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.switch[aria-checked="true"] .switch__track { background: var(--seal); border-color: var(--seal); }
+.switch[aria-checked="true"] .switch__knob { background: var(--on-seal); transform: translateX(18px); }
+.switch[aria-checked="true"] .switch__text { color: var(--seal); }
+
+/* M-04 수정 창 */
+.menu-dialog {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  padding: 24px 20px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.menu-dialog::backdrop { background: var(--backdrop); }
+.menu-dialog__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; width: 100%; }
+
+.photo-field { width: 100%; margin: 0; padding: 0; border: 0; min-width: 0; }
+.photo-field .field__label { margin-bottom: 6px; }
+.photo-field__row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.photo-field__preview { width: 96px; height: 96px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); }
+.photo-field__none {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  font-size: 13px;
+  color: var(--ink-sub);
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+}
+.photo-field__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.photo-field__status { margin-top: 6px; font-size: 14px; color: var(--ink-sub); }
+.photo-field__status:empty { display: none; }
+
+/* 파일 칸은 눈에서만 숨기고(키보드·스크린리더로는 그대로 쓸 수 있게) 감싼 label을 버튼처럼 보인다 */
+.file-btn { position: relative; }
+.file-btn__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+.file-btn:focus-within { outline: 3px solid var(--seal); outline-offset: 2px; }
+
+.dialog-error { width: 100%; font-weight: 700; color: var(--seal); }
+.dialog-error:empty { display: none; }
+
+/* 저장 결과 알림: 스크롤 위치와 상관없이 화면 아래에 보인다 */
+.toast-area {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 20;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  pointer-events: none; /* 빈 자리가 아래 버튼을 가리지 않게 */
+}
+.toast {
+  max-width: 480px;
+  padding: 10px 16px;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 6px;
+  pointer-events: auto;
+}
+.toast:empty { display: none; }
+.toast--error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--on-seal);
+  background: var(--seal);
+}
+.btn--on-seal { color: var(--on-seal); border-color: var(--on-seal); flex: none; }
+
+@media (min-width: 768px) {
+  .owner-card { padding: 28px 32px; }
+  .m-row { grid-template-columns: 64px 1fr auto; }
+  .m-row__thumb,
+  .m-row__photo,
+  .m-row__nophoto { width: 64px; height: 64px; }
+  .m-row__controls { grid-column: auto; justify-content: flex-end; }
+  .menu-dialog { padding: 28px 32px; }
+}
+
+/* ===== 13. 넓은 화면 (768px 이상) ===== */
 @media (min-width: 768px) {
   :root { --gutter: 32px; --section-gap: 96px; }
 

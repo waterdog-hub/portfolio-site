@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!--
+  작성일 2026-11-21 - portfolio-site - 한식 밥집 데모 "온기식당" 사장님 화면 (지어낸 가게)
+  파일 위치: src/demos/ongi-sikdang/owner.html
+  목적: 사장님이 공지·오늘의 백반·메뉴·품절·사진을 직접 고치는 화면 (기획: 음식점 데모 온기식당 v0.1, M-01~M-06)
+  내용은 js/owner.js가 저장된 값으로 채우고, 저장은 방문자 브라우저 localStorage에만 한다.
+-->
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사장님 화면 | 온기식당 (데모)</title>
+  <meta name="description" content="포트폴리오용 데모 사이트입니다. 지어낸 동네 한식 밥집 온기식당의 사장님용 메뉴 관리 화면 예시.">
+  <!-- 데모라서 검색 결과에 실제 가게처럼 뜨지 않게 막는다 -->
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 데모 안내 띠: 두 화면을 오가는 링크. 현재 화면은 aria-current -->
+  <div class="demo-band">
+    <p class="demo-band__text">포트폴리오용 데모예요 <span class="demo-band__links">· <a href="index.html">손님 화면</a> / <a href="owner.html" aria-current="page">사장님 화면</a></span></p>
+  </div>
+
+  <!-- 저장 못 하는 브라우저 안내 -->
+  <div class="persist-notice" id="persistNotice" role="status" hidden>
+    <p class="container">이 브라우저에서는 새로 고치거나 화면을 옮기면 바뀐 내용이 사라져요</p>
+  </div>
+
+  <header class="header">
+    <div class="container header__inner">
+      <p class="logo">온기<span>식당</span> <span class="logo__sub">· 사장님</span></p>
+      <a href="index.html" class="btn btn--sm">손님 화면 보기 →</a>
+    </div>
+  </header>
+
+  <main class="owner">
+    <div class="container">
+
+      <h1 class="section__title">가게 관리</h1>
+      <p class="owner__lead">여기서 바꾼 내용은 손님 화면에 바로 보여요. 두 화면을 나란히 열어 품절 스위치를 눌러 보세요.</p>
+
+      <!-- M-01 가게 공지 -->
+      <section class="owner-card" aria-labelledby="notice-title">
+        <h2 class="owner-card__title" id="notice-title">가게 공지</h2>
+        <form class="owner-form" id="noticeForm" novalidate>
+          <div class="field">
+            <label class="field__label" for="noticeInput">공지 한 줄 <span class="field__hint">60자까지</span></label>
+            <input class="field__input" type="text" id="noticeInput" maxlength="60" autocomplete="off">
+          </div>
+          <label class="check">
+            <input type="checkbox" id="noticeVisible">
+            <span>손님 화면에 보이기</span>
+          </label>
+          <button type="submit" class="btn btn--primary">공지 저장</button>
+        </form>
+      </section>
+
+      <!-- M-02 오늘의 백반: 날짜는 손님 화면이 오늘로 자동 표시한다 -->
+      <section class="owner-card" aria-labelledby="today-title">
+        <h2 class="owner-card__title" id="today-title">오늘의 백반</h2>
+        <form class="owner-form" id="todayForm" novalidate>
+          <div class="field">
+            <label class="field__label" for="todayDishesInput">반찬 구성 <span class="field__hint">80자까지</span></label>
+            <input class="field__input" type="text" id="todayDishesInput" maxlength="80" autocomplete="off">
+          </div>
+          <div class="field">
+            <label class="field__label" for="todayPriceInput">가격 (원)</label>
+            <input class="field__input field__input--price" type="text" id="todayPriceInput" inputmode="numeric" autocomplete="off" aria-describedby="todayPriceError">
+            <p class="field__error" id="todayPriceError" hidden>가격은 1부터 999,999까지 숫자로 적어 주세요</p>
+          </div>
+          <p class="field__hint">날짜는 손님 화면에 오늘 날짜로 자동으로 나와요.</p>
+          <button type="submit" class="btn btn--primary">오늘의 백반 저장</button>
+        </form>
+      </section>
+
+      <!-- M-03 메뉴 목록 -->
+      <section class="owner-card" aria-labelledby="menus-title">
+        <div class="owner-card__head">
+          <h2 class="owner-card__title" id="menus-title">메뉴 목록</h2>
+          <button type="button" class="btn btn--primary" id="addBtn">+ 메뉴 추가</button>
+        </div>
+        <p class="owner__count" id="menuCount"></p>
+        <div id="menuGroups"></div>
+      </section>
+
+      <!-- M-06 데모 안내와 되돌리기 -->
+      <section class="owner-card owner-card--plain" aria-labelledby="reset-title">
+        <h2 class="owner-card__title" id="reset-title">데모 안내</h2>
+        <p class="owner__lead">데모라 이 브라우저에만 저장돼요. 실제 서비스에서는 서버에 저장되어 모든 손님 휴대폰에 바로 반영돼요.</p>
+        <button type="button" class="btn" id="resetBtn">처음 메뉴로 되돌리기</button>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p class="footer__logo">온기식당</p>
+      <p class="footer__notice">포트폴리오용 데모 사이트입니다. 가게·메뉴·연락처는 모두 지어낸 예시입니다.</p>
+      <p class="footer__links"><a href="assets/CREDITS.md">사진 출처</a></p>
+      <a href="../../index.html" class="footer__back">← 포트폴리오로 돌아가기</a>
+    </div>
+  </footer>
+
+  <!-- 저장 결과 알림: 화면 아래에 잠깐 뜨고 스크린리더도 읽는다. 실패는 role="alert"로 따로 둔다 -->
+  <div class="toast-area">
+    <p class="toast" id="liveMsg" role="status"></p>
+    <div class="toast toast--error" id="errorBox" role="alert" hidden>
+      <p id="errorText"></p>
+      <button type="button" class="btn btn--sm btn--on-seal" id="errorClose">닫기</button>
+    </div>
+  </div>
+
+  <!-- M-04·M-05 메뉴 추가·수정 창: 추가와 수정이 같은 칸을 쓴다 -->
+  <dialog class="menu-dialog" id="menuDialog" aria-labelledby="dialogTitle">
+    <form class="owner-form" id="menuForm" novalidate>
+      <h2 class="owner-card__title" id="dialogTitle">메뉴 추가</h2>
+
+      <div class="field">
+        <label class="field__label" for="mName">이름 <span class="field__hint">20자까지</span></label>
+        <input class="field__input" type="text" id="mName" maxlength="20" autocomplete="off" aria-describedby="mNameError">
+        <p class="field__error" id="mNameError" hidden>이름을 1~20자로 적어 주세요</p>
+      </div>
+      <div class="field">
+        <label class="field__label" for="mPrice">가격 (원)</label>
+        <input class="field__input field__input--price" type="text" id="mPrice" inputmode="numeric" autocomplete="off" placeholder="예: 9,000" aria-describedby="mPriceError">
+        <p class="field__error" id="mPriceError" hidden>가격은 1부터 999,999까지 숫자로 적어 주세요</p>
+      </div>
+      <div class="field">
+        <label class="field__label" for="mDesc">한 줄 설명 <span class="field__hint">40자까지, 비워도 돼요</span></label>
+        <input class="field__input" type="text" id="mDesc" maxlength="40" autocomplete="off" aria-describedby="mDescError">
+        <p class="field__error" id="mDescError" hidden>설명은 40자까지 적을 수 있어요</p>
+      </div>
+      <div class="field">
+        <label class="field__label" for="mCategory">분류</label>
+        <select class="field__input" id="mCategory" aria-describedby="mCategoryError"></select>
+        <p class="field__error" id="mCategoryError" hidden>분류를 골라 주세요</p>
+      </div>
+
+      <fieldset class="photo-field">
+        <legend class="field__label">사진 <span class="field__hint">선택, jpg·png·webp</span></legend>
+        <div class="photo-field__row">
+          <img class="photo-field__preview" id="mPhotoPreview" width="96" height="96" alt="" hidden>
+          <p class="photo-field__none" id="mPhotoNone">사진 없음</p>
+          <div class="photo-field__actions">
+            <!-- 파일 칸은 숨기지 않고 글자처럼 꾸민 label로 누른다(키보드로도 열린다) -->
+            <label class="btn btn--sm file-btn">
+              <span id="mPhotoPickText">사진 올리기</span>
+              <input type="file" class="file-btn__input" id="mPhotoInput" accept="image/jpeg,image/png,image/webp">
+            </label>
+            <button type="button" class="btn btn--sm" id="mPhotoRemove">사진 빼기</button>
+          </div>
+        </div>
+        <p class="photo-field__status" id="mPhotoStatus" role="status"></p>
+      </fieldset>
+
+      <p class="dialog-error" id="dialogError" role="alert"></p>
+
+      <div class="menu-dialog__actions">
+        <button type="button" class="btn" id="dialogCancel">취소</button>
+        <button type="submit" class="btn btn--primary" id="dialogSave">저장</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 메뉴 한 줄 틀: owner.js가 복제해서 textContent로 채운다 -->
+  <template id="rowTpl">
+    <li class="m-row">
+      <div class="m-row__thumb">
+        <img class="m-row__photo" width="64" height="64" alt="">
+        <span class="m-row__nophoto">사진 없음</span>
+      </div>
+      <div class="m-row__body">
+        <p class="m-row__name"></p>
+        <p class="m-row__price"><span class="badge-soldout">품절</span> <span class="m-row__won"></span></p>
+        <p class="m-row__flash"></p>
+      </div>
+      <div class="m-row__controls">
+        <button type="button" class="switch" role="switch" aria-checked="false" data-act="soldout">
+          <span class="switch__track" aria-hidden="true"><span class="switch__knob"></span></span>
+          <span class="switch__text">품절</span>
+        </button>
+        <button type="button" class="btn btn--sm" data-act="edit">수정</button>
+        <button type="button" class="btn btn--sm" data-act="delete">삭제</button>
+      </div>
+    </li>
+  </template>
+
+  <script type="module" src="js/owner.js"></script>
+</body>
+</html>
