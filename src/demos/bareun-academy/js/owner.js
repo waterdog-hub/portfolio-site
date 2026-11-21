@@ -10,11 +10,15 @@ import {
 
 const STATUS_LABEL = { new: "새 신청", contacted: "연락함", enrolled: "등록", onhold: "보류" };
 
+// 받침에 따라 으로/로가 달라서 문구를 통째로 둔다
+const STATUS_DONE_MSG = { contacted: "연락함으로 바꿨어요", enrolled: "등록으로 바꿨어요", onhold: "보류로 바꿨어요" };
+
 const list = document.getElementById("inquiryList");
 const tpl = document.getElementById("cardTpl");
 const emptyMsg = document.getElementById("emptyMsg");
 const persistNotice = document.getElementById("persistNotice");
 const saveError = document.getElementById("saveError");
+const liveMsg = document.getElementById("liveMsg");
 const filterBtns = document.querySelectorAll(".owner__filters .tab");
 
 const storage = openStorage(window);
@@ -67,8 +71,19 @@ function render() {
   emptyMsg.hidden = items.length > 0;
 }
 
+// 다시 그리면 눌렀던 버튼이 사라져 포커스가 body로 떨어지므로, 같은 카드로 포커스를 돌려준다.
+function restoreFocus(id, target) {
+  const card = [...list.children].find((li) => li.dataset.id === id);
+  const el = card && (target === "memo"
+    ? card.querySelector(".inq__memo-input")
+    : card.querySelector(".inq__btn:not([hidden])") || card.querySelector(".inq__memo-input"));
+  // 거른 목록에서 카드가 사라졌으면 눌려 있는 필터 버튼으로 보낸다
+  (el || document.querySelector('.owner__filters .tab[aria-pressed="true"]')).focus();
+}
+
 // 새 state를 저장해 보고, 성공했을 때만 화면에 반영한다. 실패하면 이전 state를 그대로 둔다.
-function commit(next) {
+// opts: { id, target: "memo" | "action", msg } — 성공 뒤 포커스를 돌려줄 곳과 알림 문구
+function commit(next, opts = {}) {
   const r = saveState(storage, next);
   if (!r.ok) {
     saveError.textContent = "저장하지 못했어요. 브라우저 저장 공간이 막혀 있거나 가득 찼을 수 있어요. 방금 한 변경은 반영되지 않았어요.";
@@ -80,6 +95,10 @@ function commit(next) {
   persistNotice.hidden = true;
   state = next;
   render();
+  if (opts.id) restoreFocus(opts.id, opts.target);
+  // 같은 문구가 이어져도 다시 읽히게 비웠다가 채운다
+  liveMsg.textContent = "";
+  if (opts.msg) liveMsg.textContent = opts.msg;
   return true;
 }
 
@@ -90,13 +109,17 @@ list.addEventListener("click", (e) => {
   const btn = e.target.closest(".inq__btn");
   if (!btn) return;
   const id = btn.closest(".inq").dataset.id;
-  commit(setStatus(state, id, btn.dataset.status));
+  commit(setStatus(state, id, btn.dataset.status), {
+    id, target: "action", msg: STATUS_DONE_MSG[btn.dataset.status],
+  });
 });
 
 list.addEventListener("submit", (e) => {
   e.preventDefault();
   const card = e.target.closest(".inq");
-  commit(setMemo(state, card.dataset.id, card.querySelector(".inq__memo-input").value));
+  commit(setMemo(state, card.dataset.id, card.querySelector(".inq__memo-input").value), {
+    id: card.dataset.id, target: "memo", msg: "메모를 저장했어요",
+  });
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
@@ -107,9 +130,23 @@ document.getElementById("resetBtn").addEventListener("click", () => {
 // 다른 탭(학부모 화면)에서 신청하면 새로 고침 없이 다시 읽어 그린다
 window.addEventListener("storage", (e) => {
   if (e.key !== STORAGE_KEY) return;
+  // 메모를 쓰던 중이면 글자와 커서 위치를 기억했다가 다시 그린 뒤 돌려놓는다
+  const a = document.activeElement;
+  const typing = a && a.classList.contains("inq__memo-input")
+    ? { id: a.closest(".inq").dataset.id, value: a.value, start: a.selectionStart, end: a.selectionEnd }
+    : null;
   ({ state, persisted } = loadState(storage, new Date()));
   persistNotice.hidden = persisted;
   render();
+  if (typing) {
+    const card = [...list.children].find((li) => li.dataset.id === typing.id);
+    const input = card && card.querySelector(".inq__memo-input");
+    if (input) {
+      input.value = typing.value;
+      input.focus();
+      input.setSelectionRange(typing.start, typing.end);
+    }
+  }
 });
 
 render();

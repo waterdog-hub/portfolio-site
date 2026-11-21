@@ -363,6 +363,8 @@ ul, ol { padding: 0; list-style: none; }
 .owner-home { padding: 8px 16px; font-size: 14px; }
 .owner__notice { margin-top: 16px; }
 .owner__notice[hidden] { display: none; }
+.owner__status { margin-top: 12px; font-weight: 700; color: var(--navy); }
+.owner__status:empty { display: none; }
 .owner__filters { flex-wrap: wrap; margin-top: 20px; }
 
 /* O-01 개수 3칸 */
