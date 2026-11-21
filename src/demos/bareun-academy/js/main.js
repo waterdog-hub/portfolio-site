@@ -102,6 +102,10 @@ form.addEventListener("submit", (e) => {
     message: form.elements.message.value,
     consent: form.elements.consent.checked,
   };
+  // 원장님 화면(다른 탭)에서 상태·메모를 바꿨을 수 있으니 추가하기 직전에 저장소에서 다시 읽는다.
+  // 처음 연 때의 state에 더하면 그사이 바뀐 내용을 덮어써 버린다.
+  // 저장이 안 되는 브라우저(persisted=false)면 다시 읽으면 예시로 돌아가 앞서 낸 신청이 사라지므로 그대로 둔다.
+  if (persisted) ({ state, persisted } = loadState(storage, new Date()));
   const result = addInquiry(state, input, new Date());
 
   if (!result.ok) {
@@ -130,4 +134,12 @@ document.getElementById("againBtn").addEventListener("click", () => {
   form.elements.consent.checked = false;
   form.elements.message.value = "";
   form.elements.parentName.focus();
+});
+
+// 뒤로 가기로 돌아오면 브라우저가 예전 화면을 그대로 꺼내 보여 줄 수 있다(bfcache).
+// 그사이 다른 화면에서 바뀐 저장 상태를 다시 읽는다(이 화면엔 목록이 없어 저장 안내만 다시 맞춘다).
+window.addEventListener("pageshow", (e) => {
+  if (!e.persisted || !persisted) return;
+  ({ state, persisted } = loadState(storage, new Date()));
+  persistNotice.hidden = persisted;
 });

@@ -400,6 +400,9 @@ menuForm.addEventListener("submit", (e) => {
     } else if (!updateMenu(d, id, v.value, now)) {
       return "NOT_FOUND";
     }
+    // 창 안에서 사진을 바꾸지 않았으면 건드리지 않는다.
+    // 연 때의 사진을 그대로 다시 쓰면 그사이 다른 탭에서 바꾼 사진을 덮어쓰게 된다.
+    if (edit.photo === edit.originalPhoto) return null;
     const p = setPhoto(d, id, edit.photo, now);
     return p.ok ? null : p.code;
   });
@@ -434,9 +437,8 @@ $("resetBtn").addEventListener("click", () => {
 
 // ===== 다른 탭에서 바뀐 내용 반영 =====
 
-window.addEventListener("storage", (e) => {
-  if (e.key !== STORAGE_KEY && e.key !== null) return; // key가 null이면 저장소 전체가 비워진 것
-  // 목록 안 버튼에 포커스가 있었으면 다시 그린 뒤 같은 줄·같은 버튼으로 돌려놓는다
+// 저장소에서 다시 읽어 그린다. 목록 안 버튼에 포커스가 있었으면 다시 그린 뒤 같은 줄·같은 버튼으로 돌려놓는다.
+function reloadFromStorage() {
   const a = document.activeElement;
   const rowFocus = a && a.closest && a.closest(".m-row")
     ? { id: a.closest(".m-row").dataset.id, act: a.dataset.act }
@@ -451,6 +453,17 @@ window.addEventListener("storage", (e) => {
     if (rowOf(rowFocus.id)) focusRow(rowFocus.id, rowFocus.act);
     else $("addBtn").focus(); // 그 메뉴가 다른 탭에서 지워졌으면
   }
+}
+
+window.addEventListener("storage", (e) => {
+  if (e.key !== STORAGE_KEY && e.key !== null) return; // key가 null이면 저장소 전체가 비워진 것
+  reloadFromStorage();
+});
+
+// 손님 화면에 갔다가 뒤로 가기로 돌아오면 예전 화면이 그대로 꺼내질 수 있다(bfcache). 그때도 다시 읽어 그린다.
+// 쓰다 만 칸과 열린 수정 창은 reloadFromStorage가 그대로 둔다.
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted) reloadFromStorage();
 });
 
 fillNoticeForm();

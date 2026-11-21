@@ -193,3 +193,28 @@ test("sortedInquiries: 필터와 최신순, resetState는 새 시드", () => {
   assert.equal(r.createdAt, now.getTime());
   assert.equal(r.inquiries.length, s.inquiries.length);
 });
+
+// 두 탭 시나리오: 학부모 탭이 처음 읽은 state에 그대로 더하면 원장님 탭의 메모를 덮어쓴다.
+// main.js처럼 추가 직전에 다시 읽으면 원장님 변경이 남는지 본다.
+test("두 탭: 추가 직전에 다시 읽으면 다른 탭의 상태·메모 변경이 남음", () => {
+  const st = fakeStorage();
+  const parent = loadState(st, now); // 학부모 탭이 먼저 연다
+  const owner = loadState(st, now);  // 원장님 탭
+  const id = owner.state.inquiries[0].id;
+  const changed = setMemo(setStatus(owner.state, id, "onhold"), id, "다음 주 전화");
+  assert.deepEqual(saveState(st, changed), { ok: true });
+
+  // 예전 방식(처음 읽은 state에 더함)은 원장님 메모를 잃는다
+  const stale = addInquiry(parent.state, valid, new Date(now.getTime() + 1000));
+  assert.equal(stale.state.inquiries.find(i => i.id === id).memo, "");
+
+  // 고친 방식: 다시 읽고 더해서 저장
+  const fresh = loadState(st, new Date(now.getTime() + 1000));
+  const r = addInquiry(fresh.state, valid, new Date(now.getTime() + 1000));
+  saveState(st, r.state);
+  const after = loadState(st, new Date(now.getTime() + 2000)).state;
+  const inq = after.inquiries.find(i => i.id === id);
+  assert.equal(inq.memo, "다음 주 전화");
+  assert.equal(inq.status, "onhold");
+  assert.ok(after.inquiries.some(i => i.id === r.inquiry.id));
+});

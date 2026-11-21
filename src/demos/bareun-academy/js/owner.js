@@ -57,9 +57,14 @@ function buildCard(inq) {
     q(".inq__arrived").hidden = false;
   }
   // 지금 상태로 바꾸는 버튼은 필요 없으니 숨긴다
-  li.querySelectorAll(".inq__btn").forEach((b) => { b.hidden = b.dataset.status === inq.status; });
+  li.querySelectorAll(".inq__btn").forEach((b) => {
+    b.hidden = b.dataset.status === inq.status;
+    // 카드마다 같은 "등록" 버튼이 있어 스크린리더로는 구별이 안 되므로 누구의 버튼인지 이름에 넣는다
+    b.setAttribute("aria-label", `${inq.parentName} ${b.textContent}`);
+  });
   q(".inq__memo-input").value = inq.memo || "";
   q(".inq__memo-input").setAttribute("aria-label", `${inq.parentName} 메모`);
+  q(".inq__memo-save").setAttribute("aria-label", `${inq.parentName} 메모 저장`);
   return li;
 }
 
@@ -127,10 +132,8 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   commit(resetState(new Date()));
 });
 
-// 다른 탭(학부모 화면)에서 신청하면 새로 고침 없이 다시 읽어 그린다
-window.addEventListener("storage", (e) => {
-  if (e.key !== STORAGE_KEY) return;
-  // 메모를 쓰던 중이면 글자와 커서 위치를 기억했다가 다시 그린 뒤 돌려놓는다
+// 저장소에서 다시 읽어 그린다. 메모를 쓰던 중이면 글자와 커서 위치를 기억했다가 다시 그린 뒤 돌려놓는다.
+function reloadFromStorage() {
   const a = document.activeElement;
   const typing = a && a.classList.contains("inq__memo-input")
     ? { id: a.closest(".inq").dataset.id, value: a.value, start: a.selectionStart, end: a.selectionEnd }
@@ -147,6 +150,17 @@ window.addEventListener("storage", (e) => {
       input.setSelectionRange(typing.start, typing.end);
     }
   }
+}
+
+// 다른 탭(학부모 화면)에서 신청하면 새로 고침 없이 다시 읽어 그린다
+window.addEventListener("storage", (e) => {
+  if (e.key !== STORAGE_KEY && e.key !== null) return; // key가 null이면 저장소 전체가 비워진 것
+  reloadFromStorage();
+});
+
+// 뒤로 가기로 돌아와 예전 화면이 그대로 꺼내졌을 때(bfcache)도 지금 저장된 내용으로 다시 그린다
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted) reloadFromStorage();
 });
 
 render();

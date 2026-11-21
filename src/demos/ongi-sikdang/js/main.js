@@ -88,4 +88,12 @@ window.addEventListener("storage", (e) => {
   render();
 });
 
+// 사장님 화면에서 고치고 뒤로 가기로 돌아오면 브라우저가 예전 화면을 그대로 꺼낼 수 있다(bfcache).
+// 그때는 storage 이벤트가 오지 않으므로 지금 저장된 내용으로 다시 그린다.
+window.addEventListener("pageshow", (e) => {
+  if (!e.persisted) return;
+  ({ state, persisted } = loadState(storage, new Date()));
+  render();
+});
+
 render();

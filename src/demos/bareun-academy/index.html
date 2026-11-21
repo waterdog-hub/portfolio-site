@@ -20,14 +20,10 @@
 
   <!-- 데모 띠: 학부모 화면과 원장님 화면을 오가는 링크 -->
   <div class="demo-band">
-    <div class="container demo-band__inner">
-      <p>포트폴리오용 데모예요 ·</p>
-      <nav aria-label="화면 전환">
-        <a href="index.html" aria-current="page">학부모 화면</a>
-        <span aria-hidden="true">/</span>
-        <a href="owner.html">원장님 화면</a>
-      </nav>
-    </div>
+    <!-- ·, 두 링크, /를 한 덩어리(demo-band__links)로 묶어 줄이 바뀌어도 "·"만 떨어지지 않게 한다 -->
+    <nav class="container demo-band__inner" aria-label="화면 전환">
+      <p>포트폴리오용 데모예요 <span class="demo-band__links">· <a href="index.html" aria-current="page">학부모 화면</a> <span aria-hidden="true">/</span> <a href="owner.html">원장님 화면</a></span></p>
+    </nav>
   </div>
 
   <!-- P-01 상단 메뉴 -->
@@ -308,7 +304,8 @@
     <div class="container footer__inner">
       <p class="footer__logo">바른길 학원</p>
       <p class="footer__notice">포트폴리오용 데모 사이트입니다. 학원·강사·연락처는 모두 지어낸 예시입니다.</p>
-      <p><a href="assets/CREDITS.md" class="footer__link">사진 출처</a></p>
+      <!-- 사진별 작가·원본 주소는 assets/CREDITS.md에 남겨 둔다(.md는 브라우저에서 날것으로 보여서 링크하지 않는다) -->
+      <p class="footer__credit">사진: Pexels</p>
       <a href="../../index.html" class="footer__link">← 포트폴리오로 돌아가기</a>
     </div>
   </footer>
