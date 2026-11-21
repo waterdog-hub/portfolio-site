@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<!--
+  작성일 2026-11-21 - portfolio-site - 한식 밥집 데모 "온기식당" 손님 화면 (지어낸 가게)
+  파일 위치: src/demos/ongi-sikdang/index.html
+  목적: 사장님이 직접 관리하는 메뉴판을 손님 눈으로 보여 주는 포트폴리오용 페이지 (기획: 음식점 데모 온기식당 v0.1, G-01~G-07)
+  공지·오늘의 백반·메뉴판은 js/main.js가 저장된 내용으로 채운다. 전화·주소·인스타는 일부러 가짜로 둔다 (결정 D-02).
+-->
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>온기식당 | 갓 지은 밥 한 그릇 (데모)</title>
+  <meta name="description" content="포트폴리오용 데모 사이트입니다. 지어낸 동네 한식 밥집 온기식당의 손님 화면 예시.">
+  <!-- 데모라서 검색 결과에 실제 가게처럼 뜨지 않게 막는다 -->
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 데모 안내 띠: 두 화면을 오가는 링크. 현재 화면은 aria-current -->
+  <div class="demo-band">
+    <p class="demo-band__text">포트폴리오용 데모예요 <span class="demo-band__links">· <a href="index.html" aria-current="page">손님 화면</a> / <a href="owner.html">사장님 화면</a></span></p>
+  </div>
+
+  <!-- G-02 가게 공지 띠: 사장님이 켠 때만 main.js가 보여 준다 -->
+  <div class="notice-band" id="noticeBand" role="status" hidden>
+    <p class="notice-band__text container" id="noticeText"></p>
+  </div>
+
+  <!-- 저장 못 하는 브라우저 안내 -->
+  <div class="persist-notice" id="persistNotice" role="status" hidden>
+    <p class="container">이 브라우저에서는 새로 고치거나 화면을 옮기면 바뀐 내용이 사라져요</p>
+  </div>
+
+  <!-- G-01 상단 메뉴 -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#top" class="logo">온기<span>식당</span></a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="nav" aria-label="주요 메뉴">
+        <a href="#menu">메뉴</a>
+        <a href="#today">오늘의 백반</a>
+        <a href="#hours">영업 안내</a>
+        <a href="#visit">오시는 길</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- G-03 첫 화면 + 오늘의 백반 -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <p class="eyebrow">동네 한식 백반집</p>
+        <h1 class="hero__title" id="hero-title">갓 지은 밥 한 그릇,<br>매일 바뀌는 집밥 반찬</h1>
+        <figure class="hero__photo">
+          <img src="assets/hero.jpg" alt="제육볶음과 찌개, 여러 가지 반찬이 놓인 한식 상차림" width="1400" height="927">
+        </figure>
+        <section class="today" id="today" aria-labelledby="today-title">
+          <div class="today__head">
+            <h2 class="today__title" id="today-title">오늘의 백반</h2>
+            <p class="today__date" id="todayDate"></p>
+          </div>
+          <p class="today__dishes" id="todayDishes"></p>
+          <p class="today__foot"><span class="today__price" id="todayPrice"></span> <span class="today__time">점심 11:00–15:00</span></p>
+        </section>
+      </div>
+    </section>
+
+    <!-- G-04 메뉴판: 탭을 누르면 해당 분류만 거른다 -->
+    <section class="section menu" id="menu" aria-labelledby="menu-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow">MENU</p>
+          <h2 class="section__title" id="menu-title">메뉴판</h2>
+        </header>
+        <div class="tabs" role="group" aria-label="메뉴 분류">
+          <button type="button" class="tab" data-filter="all" aria-pressed="true">전체</button>
+          <button type="button" class="tab" data-filter="meal" aria-pressed="false">식사</button>
+          <button type="button" class="tab" data-filter="stew" aria-pressed="false">찌개</button>
+          <button type="button" class="tab" data-filter="set" aria-pressed="false">정식</button>
+          <button type="button" class="tab" data-filter="extra" aria-pressed="false">추가</button>
+        </div>
+        <ul class="menu-list" id="menuList"></ul>
+        <p class="menu-empty" id="menuEmpty" hidden>준비 중인 메뉴예요</p>
+      </div>
+    </section>
+
+    <!-- G-05 가게 이야기 -->
+    <section class="section story" id="story" aria-labelledby="story-title">
+      <div class="container story__inner">
+        <figure class="story__photo">
+          <img src="assets/story.jpg" alt="시장에서 고른 숙주와 당근, 부추가 소복이 담긴 모습" width="1600" height="1067" loading="lazy">
+        </figure>
+        <div class="story__text">
+          <p class="eyebrow">OUR STORY</p>
+          <h2 class="section__title" id="story-title">매일 아침 시장에서<br>장 봐서 차리는 밥상</h2>
+          <p>온기식당은 새벽 시장에서 그날 쓸 나물과 채소를 직접 골라 오는 것으로 하루를 시작해요. 숙주는 데치고, 당근은 볶고, 부추는 무쳐서 갓 지은 밥 옆에 놓습니다.</p>
+          <p>화려한 상차림은 아니어도, 집에서 먹는 것처럼 편안한 한 끼. 반찬은 매일 조금씩 바뀌어요.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- G-06 영업 안내 -->
+    <section class="section hours" id="hours" aria-labelledby="hours-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow">HOURS</p>
+          <h2 class="section__title" id="hours-title">영업 안내</h2>
+        </header>
+        <dl class="info-list">
+          <div class="info-row"><dt>영업시간</dt><dd>평일 11:00–21:00</dd></div>
+          <div class="info-row"><dt>브레이크 타임</dt><dd>평일 15:00–17:00</dd></div>
+          <div class="info-row"><dt>토요일</dt><dd>11:00–15:00</dd></div>
+          <div class="info-row"><dt>휴무</dt><dd>일요일</dd></div>
+          <div class="info-row"><dt>단체석</dt><dd>12명까지</dd></div>
+          <div class="info-row"><dt>포장</dt><dd>가능</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- G-07 오시는 길: 실제 지도 대신 그림(SVG)으로 위치를 보여 준다 -->
+    <section class="section visit" id="visit" aria-labelledby="visit-title">
+      <div class="container visit__inner">
+        <div class="visit__info">
+          <p class="eyebrow">VISIT</p>
+          <h2 class="section__title" id="visit-title">오시는 길</h2>
+          <dl class="info-list">
+            <div class="info-row"><dt>주소</dt><dd>OO시 OO구 OO로 00</dd></div>
+            <div class="info-row"><dt>전화</dt><dd>000-0000-0000</dd></div>
+          </dl>
+          <a href="#" class="btn btn--primary">인스타그램에서 오늘의 백반 보기</a>
+        </div>
+        <figure class="visit__map">
+          <svg class="map" viewBox="0 0 400 300" role="img" aria-labelledby="map-title">
+            <title id="map-title">약도: OO로와 큰길이 만나는 모퉁이, 시장 맞은편에 온기식당이 있다</title>
+            <rect class="map__bg" width="400" height="300"/>
+            <rect class="map__block" x="250" y="30" width="120" height="90" rx="6"/>
+            <path class="map__road" d="M0 170 H400"/>
+            <path class="map__road" d="M180 0 V300"/>
+            <path class="map__road map__road--small" d="M0 60 H180 M180 240 H400"/>
+            <circle class="map__pin" cx="215" cy="140" r="12"/>
+            <circle class="map__pin-dot" cx="215" cy="140" r="4"/>
+            <text class="map__label map__label--strong" x="232" y="145">온기식당</text>
+            <text class="map__label" x="310" y="80" text-anchor="middle">시장</text>
+            <text class="map__label" x="20" y="200">OO로</text>
+            <text class="map__label" x="198" y="290">큰길</text>
+          </svg>
+          <figcaption>약도는 예시 그림입니다.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p class="footer__logo">온기식당</p>
+      <p class="footer__notice">포트폴리오용 데모 사이트입니다. 가게·메뉴·연락처는 모두 지어낸 예시입니다.</p>
+      <p class="footer__links"><a href="assets/CREDITS.md">사진 출처</a></p>
+      <a href="../../index.html" class="footer__back">← 포트폴리오로 돌아가기</a>
+    </div>
+  </footer>
+
+  <!-- 메뉴 한 줄 틀: main.js가 복제해서 textContent로 채운다 -->
+  <template id="menuItemTpl">
+    <li class="menu-item">
+      <img class="menu-item__photo" width="64" height="64" loading="lazy" alt="">
+      <div class="menu-item__body">
+        <h3 class="menu-item__name"></h3>
+        <p class="menu-item__desc"></p>
+      </div>
+      <p class="menu-item__price"><span class="badge-soldout">품절</span> <span class="menu-item__won"></span></p>
+    </li>
+  </template>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
