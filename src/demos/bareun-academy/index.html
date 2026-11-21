@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!--
+  작성일: 2026-11-21
+  파일 위치: src/demos/bareun-academy/index.html
+  목적: 가상 학원 "바른길 학원"의 학부모 화면(P-01~P-08). 상담 신청은 방문자 브라우저에만 저장한다.
+  전화·주소는 일부러 가짜로 둔다 (결정 D-02). 사진 출처는 assets/CREDITS.md.
+-->
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>바른길 학원 | 기초부터 다시, 성적이 오르는 공부 습관 (데모)</title>
+  <meta name="description" content="포트폴리오용 데모 사이트입니다. 지어낸 초·중등 보습학원 바른길 학원의 홈페이지와 상담 신청 예시.">
+  <!-- 데모라서 검색 결과에 실제 학원처럼 뜨지 않게 막는다 -->
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 데모 띠: 학부모 화면과 원장님 화면을 오가는 링크 -->
+  <div class="demo-band">
+    <div class="container demo-band__inner">
+      <p>포트폴리오용 데모예요</p>
+      <nav aria-label="화면 전환">
+        <a href="index.html" aria-current="page">학부모 화면</a>
+        <a href="owner.html">원장님 화면</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- P-01 상단 메뉴 -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#top" class="logo">바른길 <span>학원</span></a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" id="nav" aria-label="주요 메뉴">
+        <a href="#courses">강좌·시간표</a>
+        <a href="#teachers">강사</a>
+        <a href="#method">수업 방식</a>
+        <a href="#consult" class="nav__cta">상담 신청</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- P-02 첫 화면 -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <p class="eyebrow">초·중등 수학 · 영어</p>
+          <h1 class="hero__title" id="hero-title">기초부터 다시,<br>성적이 오르는 공부 습관</h1>
+          <p class="hero__desc">한 반 8명 이하로, 아이의 현재 실력에서 시작합니다.<br>매주 학부모님께 공부 리포트를 보내 드려요.</p>
+          <a href="#consult" class="btn btn--primary">무료 상담 신청</a>
+        </div>
+        <figure class="hero__photo">
+          <img src="assets/classroom.jpg" alt="화이트보드가 있는 밝고 깨끗한 빈 교실" width="1600" height="1067">
+        </figure>
+      </div>
+      <div class="container">
+        <ul class="stats">
+          <li class="stats__item"><strong>8명</strong><span>반 정원</span></li>
+          <li class="stats__item"><strong>주 1회</strong><span>학부모 리포트</span></li>
+          <li class="stats__item"><strong>12년</strong><span>원장 경력</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- P-03 강좌·시간표: 탭 버튼이 목록을 거른다(main.js) -->
+    <section class="section" id="courses" aria-labelledby="courses-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow">TIMETABLE</p>
+          <h2 class="section__title" id="courses-title">강좌·시간표</h2>
+          <p class="section__lead">아이 학년에 맞는 반을 골라 보세요. 자리가 거의 남지 않은 반은 먼저 상담해 드려요.</p>
+        </header>
+        <div class="tabs" role="group" aria-label="학교급 선택">
+          <button type="button" class="tab" data-filter="all" aria-pressed="true">전체</button>
+          <button type="button" class="tab" data-filter="elementary" aria-pressed="false">초등</button>
+          <button type="button" class="tab" data-filter="middle" aria-pressed="false">중등</button>
+        </div>
+        <ul class="timetable" id="timetable">
+          <li class="class-row" data-level="elementary">
+            <p class="class-row__name"><span class="class-row__grade">초4</span> 수학 기초</p>
+            <p class="class-row__time">월·수 16:00–17:30</p>
+            <p class="class-row__seat">5자리 남음</p>
+          </li>
+          <li class="class-row" data-level="elementary">
+            <p class="class-row__name"><span class="class-row__grade">초5</span> 수학 기초</p>
+            <p class="class-row__time">화·목 16:00–17:30</p>
+            <p class="class-row__seat">4자리 남음</p>
+          </li>
+          <li class="class-row" data-level="elementary">
+            <p class="class-row__name"><span class="class-row__grade">초6</span> 영어 기본</p>
+            <p class="class-row__time">월·수 17:40–19:10</p>
+            <p class="class-row__seat class-row__seat--few">2자리 남음</p>
+          </li>
+          <li class="class-row" data-level="middle">
+            <p class="class-row__name"><span class="class-row__grade">중1</span> 수학 기본</p>
+            <p class="class-row__time">화·목 17:40–19:40</p>
+            <p class="class-row__seat">3자리 남음</p>
+          </li>
+          <li class="class-row" data-level="middle">
+            <p class="class-row__name"><span class="class-row__grade">중2</span> 영어 내신</p>
+            <p class="class-row__time">월·수 19:20–21:00</p>
+            <p class="class-row__seat">4자리 남음</p>
+          </li>
+          <li class="class-row" data-level="middle">
+            <p class="class-row__name"><span class="class-row__grade">중2</span> 수학 심화</p>
+            <p class="class-row__time">화·목 19:50–21:50</p>
+            <p class="class-row__seat class-row__seat--closed">마감</p>
+          </li>
+          <li class="class-row" data-level="middle">
+            <p class="class-row__name"><span class="class-row__grade">중3</span> 수학 심화</p>
+            <p class="class-row__time">월·수·금 19:50–21:50</p>
+            <p class="class-row__seat">3자리 남음</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- P-04 강사 소개: 가짜 인물 사진 대신 이니셜 원형 -->
+    <section class="section section--soft" id="teachers" aria-labelledby="teachers-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow">TEACHERS</p>
+          <h2 class="section__title" id="teachers-title">강사 소개</h2>
+        </header>
+        <ul class="teachers">
+          <li class="teacher">
+            <span class="teacher__initial" aria-hidden="true">한</span>
+            <div>
+              <h3 class="teacher__name">한바른 원장 <span class="teacher__role">수학</span></h3>
+              <p>개념을 말로 설명할 수 있을 때까지 반복해 줍니다. 틀린 문제를 함께 다시 풀어요.</p>
+            </div>
+          </li>
+          <li class="teacher">
+            <span class="teacher__initial" aria-hidden="true">이</span>
+            <div>
+              <h3 class="teacher__name">이서윤 선생님 <span class="teacher__role">영어</span></h3>
+              <p>읽기와 어휘를 매주 꾸준히 쌓아 내신과 중학 영어까지 이어 줍니다.</p>
+            </div>
+          </li>
+          <li class="teacher">
+            <span class="teacher__initial" aria-hidden="true">박</span>
+            <div>
+              <h3 class="teacher__name">박지후 선생님 <span class="teacher__role">영어</span></h3>
+              <p>말하기와 듣기를 놀이처럼 시작해 영어에 대한 부담을 줄여 줍니다.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- P-05 수업 방식: 순서가 있는 3단계 -->
+    <section class="section" id="method" aria-labelledby="method-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="eyebrow">METHOD</p>
+          <h2 class="section__title" id="method-title">수업 방식</h2>
+          <p class="section__lead">현재 실력을 먼저 확인하고, 그에 맞는 반에서 시작해요.</p>
+        </header>
+        <ol class="steps">
+          <li class="step">
+            <span class="step__num" aria-hidden="true">1</span>
+            <h3 class="step__title">진단 테스트</h3>
+            <p>30분 정도 풀어 보며 어디가 비어 있는지 확인합니다.</p>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true">2</span>
+            <h3 class="step__title">반 배정</h3>
+            <p>결과에 맞춰 학년이 아니라 실력에 맞는 반을 안내해 드려요.</p>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true">3</span>
+            <h3 class="step__title">매주 리포트</h3>
+            <p>그 주에 한 공부와 다음 주 계획을 학부모님께 보내 드립니다.</p>
+          </li>
+        </ol>
+        <figure class="method__photo">
+          <img src="assets/desk.jpg" alt="공책과 색연필이 놓인 하얀 책상" width="1600" height="1067" loading="lazy">
+        </figure>
+      </div>
+    </section>
+
+    <!-- P-06 상담 신청 + P-07 신청 완료(같은 자리에서 바뀐다) -->
+    <section class="section section--soft" id="consult" aria-labelledby="consult-title">
+      <div class="container consult">
+        <header class="section__head">
+          <p class="eyebrow">CONSULT</p>
+          <h2 class="section__title" id="consult-title">무료 상담 신청</h2>
+          <p class="section__lead">남겨 주시면 편한 시간에 연락드려요. 데모라서 실제로 연락이 가지는 않습니다.</p>
+        </header>
+
+        <!-- 저장 불가 안내(main.js가 필요할 때만 보여 준다) -->
+        <p class="notice notice--warn" id="persistNotice" role="status" hidden>이 브라우저에서는 새로 고치면 신청이 사라져요. 학부모 화면에서 원장님 화면으로 넘어가도 신청이 보이지 않을 수 있어요.</p>
+
+        <div class="consult__grid">
+          <form class="form" id="consultForm" novalidate>
+            <p class="notice">실제 정보를 넣지 마세요. 미리 채워진 예시 값을 그대로 써도 됩니다.</p>
+
+            <div class="field">
+              <label for="parentName">학부모 이름</label>
+              <input type="text" id="parentName" name="parentName" value="예시 이름" maxlength="20" autocomplete="off" aria-describedby="parentName-error">
+              <p class="field__error" id="parentName-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="phone">연락처</label>
+              <input type="tel" id="phone" name="phone" value="000-0000-0000" inputmode="tel" autocomplete="off" aria-describedby="phone-error">
+              <p class="field__error" id="phone-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="grade">자녀 학년</label>
+              <select id="grade" name="grade" aria-describedby="grade-error">
+                <option value="">선택해 주세요</option>
+                <option>초4</option><option>초5</option><option>초6</option>
+                <option>중1</option><option>중2</option><option>중3</option>
+              </select>
+              <p class="field__error" id="grade-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="subject">과목</label>
+              <select id="subject" name="subject" aria-describedby="subject-error">
+                <option value="">선택해 주세요</option>
+                <option>수학</option><option>영어</option><option>둘 다</option>
+              </select>
+              <p class="field__error" id="subject-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="preferredTime">상담하기 편한 시간</label>
+              <select id="preferredTime" name="preferredTime" aria-describedby="preferredTime-error">
+                <option value="">선택해 주세요</option>
+                <option>평일 오후</option><option>평일 저녁</option><option>주말</option>
+              </select>
+              <p class="field__error" id="preferredTime-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="message">문의 내용 (선택)</label>
+              <textarea id="message" name="message" rows="3" maxlength="200" aria-describedby="message-error"></textarea>
+              <p class="field__error" id="message-error" hidden></p>
+            </div>
+            <div class="field field--check">
+              <input type="checkbox" id="consent" name="consent" aria-describedby="consent-error">
+              <label for="consent">개인정보 수집·이용에 동의합니다. (데모라서 이 브라우저에만 저장돼요)</label>
+              <p class="field__error" id="consent-error" hidden></p>
+            </div>
+            <p class="field__error form__error" id="formError" role="alert" hidden></p>
+            <button type="submit" class="btn btn--primary btn--block" id="submitBtn">상담 신청하기</button>
+          </form>
+
+          <!-- P-07 신청 완료: 처음엔 hidden, 신청이 끝나면 폼 대신 보인다 -->
+          <section class="done" id="done" aria-labelledby="done-title" hidden>
+            <span class="badge" id="doneBadge">새 신청</span>
+            <h3 class="done__title" id="done-title" tabindex="-1">상담 신청이 접수됐어요</h3>
+            <dl class="done__list">
+              <div><dt>학부모</dt><dd id="doneName"></dd></div>
+              <div><dt>자녀 학년</dt><dd id="doneGrade"></dd></div>
+              <div><dt>과목</dt><dd id="doneSubject"></dd></div>
+              <div><dt>편한 시간</dt><dd id="doneTime"></dd></div>
+            </dl>
+            <p class="notice">실제 서비스에서는 서버에 저장하고 원장님 휴대폰으로 알림톡을 보내요.</p>
+            <a href="owner.html" class="btn btn--primary btn--block">원장님 화면에서 확인해 보기</a>
+            <button type="button" class="btn btn--ghost btn--block" id="againBtn">한 번 더 신청하기</button>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- P-08 오시는 길: 지도 대신 그림 -->
+    <section class="section" id="visit" aria-labelledby="visit-title">
+      <div class="container visit">
+        <div class="visit__info">
+          <p class="eyebrow">VISIT</p>
+          <h2 class="section__title" id="visit-title">오시는 길</h2>
+          <dl class="visit__list">
+            <div><dt>운영 시간</dt><dd>평일 14:00–22:00 · 토요일 10:00–16:00 · 일요일 휴무</dd></div>
+            <div><dt>주소</dt><dd>OO시 OO구 OO로 00</dd></div>
+            <div><dt>전화</dt><dd>000-0000-0000</dd></div>
+          </dl>
+        </div>
+        <figure class="visit__map">
+          <svg class="map" viewBox="0 0 400 300" role="img" aria-labelledby="map-title">
+            <title id="map-title">약도: 큰길과 OO로가 만나는 모퉁이, 초등학교 맞은편에 바른길 학원이 있다</title>
+            <rect class="map__bg" width="400" height="300"/>
+            <rect class="map__school" x="40" y="30" width="110" height="80" rx="6"/>
+            <path class="map__road" d="M0 170 H400"/>
+            <path class="map__road" d="M220 0 V300"/>
+            <circle class="map__pin" cx="255" cy="140" r="12"/>
+            <circle class="map__pin-dot" cx="255" cy="140" r="4"/>
+            <text class="map__label map__label--strong" x="272" y="145">바른길 학원</text>
+            <text class="map__label" x="95" y="75" text-anchor="middle">초등학교</text>
+            <text class="map__label" x="20" y="200">OO로</text>
+            <text class="map__label" x="238" y="290">큰길</text>
+          </svg>
+          <figcaption>약도는 예시 그림입니다.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- P-08 바닥글 -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p class="footer__logo">바른길 학원</p>
+      <p class="footer__notice">포트폴리오용 데모 사이트입니다. 학원·강사·시간표·연락처는 모두 지어낸 예시입니다.</p>
+      <p><a href="assets/CREDITS.md" class="footer__link">사진 출처</a></p>
+      <a href="../../index.html" class="footer__link">← 포트폴리오로 돌아가기</a>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
