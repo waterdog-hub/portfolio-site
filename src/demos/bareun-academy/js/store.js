@@ -48,10 +48,16 @@ export function openStorage(win) {
   }
 }
 
+// 신청 항목 하나가 화면에서 쓸 수 있는 모양인지 본다(깨진 값이 화면을 망가뜨리지 않게).
+function isValidInquiry(i) {
+  return i && typeof i === "object" && typeof i.id === "string"
+    && STATUSES.includes(i.status) && typeof i.createdAt === "number";
+}
+
 function isValid(state) {
   return state && typeof state === "object" && state.version === 1
     && typeof state.createdAt === "number" && Number.isFinite(state.createdAt)
-    && Array.isArray(state.inquiries);
+    && Array.isArray(state.inquiries) && state.inquiries.every(isValidInquiry);
 }
 
 export function loadState(storage, now) {
@@ -61,7 +67,9 @@ export function loadState(storage, now) {
     if (raw !== null) {
       const parsed = JSON.parse(raw);
       // 24시간이 지났거나 형식이 깨졌으면 예시 데이터로 되돌린다.
-      if (isValid(parsed) && now.getTime() - parsed.createdAt <= LIFETIME_MS) {
+      // createdAt이 미래인 값(시계 조작 등)도 만료로 본다.
+      const age = now.getTime() - parsed.createdAt;
+      if (isValid(parsed) && age >= 0 && age <= LIFETIME_MS) {
         return { state: parsed, persisted: true };
       }
     }
@@ -82,4 +90,77 @@ export function saveState(storage, state) {
     // 용량 초과(name 또는 code 22/1014)든 그 밖의 쓰기 실패든 방문자에게는 "저장 불가"라 같은 QUOTA로 묶는다.
     return { ok: false, code: "QUOTA" };
   }
+}
+
+// 아래 함수들은 받은 state를 고치지 않고 새 state를 돌려준다. 저장이 실패해도 화면이 예전 state를 그대로 쓰면 된다.
+
+export function validateInquiry(input) {
+  const parentName = String(input.parentName ?? "").trim();
+  const phone = String(input.phone ?? "").trim();
+  const grade = String(input.grade ?? "").trim();
+  const subject = String(input.subject ?? "").trim();
+  const preferredTime = String(input.preferredTime ?? "").trim();
+  const message = String(input.message ?? "").trim();
+  if (parentName.length < 1 || parentName.length > 20) return { ok: false, field: "parentName" };
+  if (!/^[0-9-]{9,13}$/.test(phone)) return { ok: false, field: "phone" };
+  if (!grade) return { ok: false, field: "grade" };
+  if (!subject) return { ok: false, field: "subject" };
+  if (!preferredTime) return { ok: false, field: "preferredTime" };
+  if (message.length > 200) return { ok: false, field: "message" };
+  if (input.consent !== true) return { ok: false, field: "consent" };
+  return { ok: true, value: { parentName, phone, grade, subject, preferredTime, message } };
+}
+
+export function addInquiry(state, input, now) {
+  const v = validateInquiry(input);
+  if (!v.ok) return { ok: false, code: "INVALID", field: v.field };
+  // 예시 건은 세지 않고 방문자가 낸 신청만 20건으로 제한한다.
+  if (state.inquiries.filter(i => !i.isSample).length >= MAX_VISITOR_INQUIRIES) {
+    return { ok: false, code: "LIMIT" };
+  }
+  const inquiry = {
+    id: crypto.randomUUID(),
+    ...v.value,
+    status: "new",
+    memo: "",
+    createdAt: now.getTime(),
+    isSample: false,
+  };
+  const next = structuredClone(state);
+  next.inquiries.push(inquiry);
+  return { ok: true, state: next, inquiry };
+}
+
+export function setStatus(state, id, status) {
+  if (!STATUSES.includes(status) || !state.inquiries.some(i => i.id === id)) return state;
+  const next = structuredClone(state);
+  next.inquiries.find(i => i.id === id).status = status;
+  return next;
+}
+
+export function setMemo(state, id, memo) {
+  if (!state.inquiries.some(i => i.id === id)) return state;
+  const next = structuredClone(state);
+  next.inquiries.find(i => i.id === id).memo = String(memo ?? "").trim().slice(0, 100);
+  return next;
+}
+
+export function countByStatus(state) {
+  const c = { new: 0, contacted: 0, enrolled: 0, onhold: 0 };
+  for (const i of state.inquiries) c[i.status]++;
+  return c;
+}
+
+export function sortedInquiries(state, filter) {
+  return state.inquiries
+    .filter(i => filter === "all" || i.status === filter)
+    .sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export function isJustArrived(inquiry) {
+  return !inquiry.isSample && inquiry.status === "new";
+}
+
+export function resetState(now) {
+  return createSeed(now);
 }
