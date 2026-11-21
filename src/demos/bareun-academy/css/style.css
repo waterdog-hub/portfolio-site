@@ -357,3 +357,52 @@ ul, ol { padding: 0; list-style: none; }
   .consult__grid { grid-template-columns: minmax(0, 560px); }
   .visit { grid-template-columns: 1fr 1fr; align-items: center; }
 }
+
+/* ===== 13. 원장님 화면 (owner.html) ===== */
+.owner { padding: 32px 0 var(--section-gap); background: var(--bg-soft); }
+.owner-home { padding: 8px 16px; font-size: 14px; }
+.owner__notice { margin-top: 16px; }
+.owner__notice[hidden] { display: none; }
+.owner__filters { flex-wrap: wrap; margin-top: 20px; }
+
+/* O-01 개수 3칸 */
+.counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; }
+.counts__item { display: flex; flex-direction: column; align-items: center; padding: 14px 4px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); }
+.counts__item strong { font-size: 28px; line-height: 1.3; font-weight: 800; color: var(--navy); }
+.counts__item span { font-size: 14px; color: var(--text-sub); }
+
+/* O-03~O-05 신청 카드 */
+.inquiries { display: grid; gap: 14px; }
+.inq { display: grid; gap: 12px; padding: 18px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); }
+.inq--arrived { border: 2px solid var(--accent-warm); }
+.inq__arrived { justify-self: start; padding: 2px 12px; border-radius: 999px; background: var(--accent-warm-soft); color: var(--text); font-size: 13px; font-weight: 800; }
+.inq__arrived[hidden] { display: none; }
+.inq__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+.inq__name { font-size: 17px; font-weight: 800; color: var(--navy); overflow-wrap: anywhere; }
+.inq__badge { padding: 2px 12px; border-radius: 999px; border: 1px solid var(--line); font-size: 13px; font-weight: 700; }
+.inq__badge--new { background: var(--accent-warm-soft); color: var(--text); border-color: var(--accent-warm); }
+.inq__badge--contacted { background: var(--navy-soft); color: var(--navy); }
+.inq__badge--enrolled { background: var(--navy); color: var(--on-navy); border-color: var(--navy); }
+.inq__badge--onhold { background: var(--bg); color: var(--text-sub); }
+.inq__list { display: grid; gap: 4px; font-size: 15px; }
+.inq__list div { display: flex; gap: 12px; }
+.inq__list dt { flex: none; width: 72px; color: var(--text-sub); }
+.inq__list dd { min-width: 0; overflow-wrap: anywhere; }
+.inq__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.inq__btn { padding: 8px 14px; font-size: 14px; }
+.inq__btn[hidden] { display: none; }
+.inq__memo { display: flex; gap: 8px; align-items: end; }
+.inq__memo-label { flex: 1; min-width: 0; display: grid; gap: 4px; font-size: 14px; font-weight: 700; }
+.inq__memo-input { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--text); font: inherit; font-weight: 400; }
+.inq__memo-save { padding: 10px 16px; font-size: 14px; }
+
+.owner__empty { margin-top: 20px; padding: 24px; text-align: center; color: var(--text-sub); background: var(--bg); border: 1px dashed var(--line); border-radius: var(--radius); }
+.owner__empty[hidden] { display: none; }
+
+/* O-06 안내와 되돌리기 */
+.owner__reset { display: grid; gap: 12px; justify-items: start; margin-top: 36px; }
+.owner__reset-title { font-size: 18px; font-weight: 800; color: var(--navy); }
+
+@media (min-width: 768px) {
+  .inquiries { grid-template-columns: 1fr 1fr; }
+}

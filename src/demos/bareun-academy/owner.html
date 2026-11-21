@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!--
+  작성일: 2026-11-21
+  파일 위치: src/demos/bareun-academy/owner.html
+  목적: 가상 학원 "바른길 학원"의 원장님 화면(O-01~O-06). 학부모 화면에서 받은 상담 신청을 보고 상태·메모를 바꾼다.
+  데이터는 방문자 브라우저 localStorage에만 있다. 사진 출처는 assets/CREDITS.md.
+-->
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>원장님 화면 | 바른길 학원 (데모)</title>
+  <meta name="description" content="포트폴리오용 데모 사이트입니다. 지어낸 학원 바른길 학원의 원장님용 상담 신청 관리 화면 예시.">
+  <!-- 데모라서 검색 결과에 실제 학원처럼 뜨지 않게 막는다 -->
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 데모 띠: 학부모 화면과 원장님 화면을 오가는 링크 -->
+  <div class="demo-band">
+    <div class="container demo-band__inner">
+      <p>포트폴리오용 데모예요 ·</p>
+      <nav aria-label="화면 전환">
+        <a href="index.html">학부모 화면</a>
+        <span aria-hidden="true">/</span>
+        <a href="owner.html" aria-current="page">원장님 화면</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="container header__inner">
+      <p class="logo">바른길 <span>학원 · 원장님</span></p>
+      <a href="index.html" class="btn btn--ghost owner-home">홈페이지 보기</a>
+    </div>
+  </header>
+
+  <main class="owner">
+    <div class="container">
+
+      <h1 class="section__title">상담 신청 관리</h1>
+      <p class="section__lead">학부모 화면에서 받은 신청이 여기에 모여요. 연락한 뒤 상태를 바꾸고 메모를 남겨 보세요.</p>
+
+      <!-- 저장 불가 안내(owner.js가 필요할 때만 보여 준다) -->
+      <p class="notice notice--warn owner__notice" id="persistNotice" role="status" hidden>이 브라우저에서는 새로 고치면 신청이 사라져요. 학부모 화면에서 낸 신청이 이 화면에 보이지 않을 수 있어요.</p>
+      <p class="notice notice--warn owner__notice" id="saveError" role="alert" hidden></p>
+
+      <!-- O-01 상태별 개수 -->
+      <ul class="counts" aria-label="상태별 신청 개수">
+        <li class="counts__item"><strong id="countNew">0</strong><span>새 신청</span></li>
+        <li class="counts__item"><strong id="countContacted">0</strong><span>연락함</span></li>
+        <li class="counts__item"><strong id="countDone">0</strong><span>등록</span></li>
+      </ul>
+
+      <!-- O-02 필터: 눌린 버튼에 aria-pressed -->
+      <div class="tabs owner__filters" role="group" aria-label="상태로 거르기">
+        <button type="button" class="tab" data-filter="all" aria-pressed="true">전체</button>
+        <button type="button" class="tab" data-filter="new" aria-pressed="false">새 신청</button>
+        <button type="button" class="tab" data-filter="contacted" aria-pressed="false">연락함</button>
+        <button type="button" class="tab" data-filter="enrolled" aria-pressed="false">등록</button>
+        <button type="button" class="tab" data-filter="onhold" aria-pressed="false">보류</button>
+      </div>
+
+      <!-- O-03~O-05 신청 목록 -->
+      <ul class="inquiries" id="inquiryList"></ul>
+      <p class="owner__empty" id="emptyMsg" hidden>이 상태의 신청이 아직 없어요.</p>
+
+      <!-- O-06 안내와 되돌리기 -->
+      <section class="owner__reset" aria-labelledby="reset-title">
+        <h2 class="owner__reset-title" id="reset-title">데모 안내</h2>
+        <p class="notice">신청은 이 브라우저에만 24시간 저장돼요. 실제 서비스에서는 서버에 저장하고 원장님 휴대폰으로 알림을 보내요. 표시된 학부모 이름·연락처는 모두 지어낸 예시입니다.</p>
+        <button type="button" class="btn btn--ghost" id="resetBtn">예시로 되돌리기</button>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- 신청 카드 틀: owner.js가 복제해 textContent로 채운다 -->
+  <template id="cardTpl">
+    <li class="inq">
+      <p class="inq__arrived" hidden>방금 들어온 신청</p>
+      <div class="inq__head">
+        <h2 class="inq__name"></h2>
+        <span class="inq__badge"></span>
+      </div>
+      <dl class="inq__list">
+        <div><dt>연락처</dt><dd class="inq__phone"></dd></div>
+        <div><dt>편한 시간</dt><dd class="inq__time"></dd></div>
+        <div><dt>문의</dt><dd class="inq__message"></dd></div>
+        <div><dt>신청 시각</dt><dd class="inq__at"></dd></div>
+      </dl>
+      <div class="inq__actions">
+        <button type="button" class="btn btn--ghost inq__btn" data-status="contacted">연락함으로</button>
+        <button type="button" class="btn btn--ghost inq__btn" data-status="enrolled">등록</button>
+        <button type="button" class="btn btn--ghost inq__btn" data-status="onhold">보류</button>
+      </div>
+      <form class="inq__memo">
+        <label class="inq__memo-label">메모 <input type="text" class="inq__memo-input" maxlength="100" autocomplete="off"></label>
+        <button type="submit" class="btn btn--primary inq__memo-save">저장</button>
+      </form>
+    </li>
+  </template>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p class="footer__logo">바른길 학원</p>
+      <p class="footer__notice">포트폴리오용 데모 사이트입니다. 학원·강사·연락처는 모두 지어낸 예시입니다.</p>
+      <p><a href="assets/CREDITS.md" class="footer__link">사진 출처</a></p>
+      <a href="../../index.html" class="footer__link">← 포트폴리오로 돌아가기</a>
+    </div>
+  </footer>
+
+  <script type="module" src="js/owner.js"></script>
+</body>
+</html>
