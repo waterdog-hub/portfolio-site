@@ -4,7 +4,7 @@
 
 - **프로젝트명**: `portfolio-site`
 - **한 줄 설명**: 크몽·숨고 외주 홍보용 1인 웹 제작 포트폴리오 사이트
-- **상태**: 원페이지 완료, 하루밀 베이커리 데모(`src/demos/haru-bakery/`)를 포트폴리오 첫 사례로 연결, 포트폴리오 사례 3건(remodel-link, 잇다, smart-voca)과 실제 화면 스크린샷 반영 (2026-11-20). 활동명 PACSE, 가격 STANDARD 30만 원~ / DELUXE 80만 원~ / PREMIUM 150만 원~(D-11) 확정. 바른길 학원 데모(`src/demos/bareun-academy/`)와 온기식당 데모(`src/demos/ongi-sikdang/`)를 포트폴리오 카드로 연결 (2026-11-21). 플랫폼 링크만 자리표시
+- **상태**: 원페이지 완료, 하루밀 베이커리 데모(`src/demos/haru-bakery/`)를 포트폴리오 첫 사례로 연결, 포트폴리오 사례 3건(remodel-link, 잇다, smart-voca)과 실제 화면 스크린샷 반영 (2026-11-20). 활동명 PACSE, 가격 STANDARD 30만 원~ / DELUXE 80만 원~ / PREMIUM 150만 원~(D-11) 확정. 바른길 학원 데모(`src/demos/bareun-academy/`)와 온기식당 데모(`src/demos/ongi-sikdang/`)를 포트폴리오 카드로 연결 (2026-11-21). 미용실 예약 데모 살롱 결(별도 FastAPI 프로젝트, Render 배포)을 카드로 연결 (2026-11-22). 플랫폼 링크만 자리표시
 - **기획 문서**: `ai-agent/claude/기획_261120_포트폴리오 사이트 기획 v0.1.md` (요구사항 ID R-01~R-13, 결정 D-01~D-12)
 
 ### 기술 스택
@@ -72,6 +72,7 @@ portfolio-site/
 - **스크린샷 다시 찍기 (D-05)**: 개발 DB를 쓰지 않는다. smart-voca·remodel-link는 각 프로젝트에서 `.venv\Scripts\python ai-agent/scripts/browser_check.py --keep`을 실행하고 결과 폴더의 `*_1280.png`를 고른다(remodel-link는 `contract_in_progress_company_1280.png`, smart-voca는 `home_1280.png`). 잇다는 가짜 LLM(`node tools/fake-llm/fake-llm.js`)과 테스트 스키마(`DB_URL`을 `itda_it`로)로 백엔드를 띄우고 API로 지어낸 데이터를 넣어 찍는다. 파일은 `src/assets/`에 1280x900으로 둔다. 휴대폰용은 같은 방법으로 375px 너비로 찍어 `이름-375.png`로 둔다(remodel-link `contract_in_progress_performer_375.png`, smart-voca `home_375.png`, 잇다는 문항 화면).
 - **하루밀 베이커리 데모**: 위치 `src/demos/haru-bakery/` (사진 출처 `assets/CREDITS.md`). 포트폴리오 카드용 스크린샷은 `py -3 ai-agent/scripts/screenshot.py URL 출력경로 375 800 jpeg 80`(1280은 1280 900)으로 CDP 기기 에뮬레이션을 써서 찍는다 (헤드리스 Edge 창은 약 496px보다 좁아지지 않아 --window-size로는 375px을 찍을 수 없다), JPEG.
 - **바른길 학원·온기식당 데모**: 데모 저장 규칙 테스트는 저장소 루트에서 `node --test tests/` (Node 26, 테스트는 src 밖이라 배포되지 않는다). 두 데모는 ES 모듈이라 `file://`로 열면 동작하지 않으니 `py -3 -m http.server 8000 -d src`로 확인한다. 사진 출처는 `src/demos/bareun-academy/assets/CREDITS.md`, `src/demos/ongi-sikdang/assets/CREDITS.md`.
+- **살롱 결 데모**: 별도 프로젝트 `C:\Users\PC2602\salon-demo` (공개 저장소 `waterdog-hub/salon-demo`). `main`에 푸시하면 Render(`salon-demo-t1bw.onrender.com`, 무료)가 배포한다. 감시 서비스가 5분마다 `/api/v1/health`를 불러 깨워 둔다(D-08). 쿠키 없는 요청은 IP당 10분에 20번까지만 예시 가게를 만든다. 포트폴리오 카드 스크린샷(`src/assets/salon-gyeol*.jpg`)은 실제 주소에서 예약 한 건을 넣고 사장님 화면을 1280x900, 375x800 JPEG로 찍었다.
 - **로컬 미리보기**: `src/index.html`을 브라우저로 바로 열면 된다. 서버가 필요하면 `py -3 -m http.server 8000 -d src`.
 - **Python 실행 명령**: 이 PC에서는 `python`이 동작하지 않는다. `py -3`을 쓴다.
 - **Git 설정**: 기본 브랜치 `main`. 작성자(`user.name`, noreply `user.email`)와 `core.autocrlf=input`은 smart-voca처럼 저장소 설정으로만 넣었다 (전역 설정 없음). 빈 폴더(`assets/`, `uploads/`, `scripts/`)는 파일이 생기면 추적된다.
