@@ -1,0 +1,263 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Gowun+Batang:wght@400;700&family=Nanum+Pen+Script&family=Black+Han+Sans&display=swap">
+<style>
+  .mb{display:grid;grid-template-columns:1fr;gap:24px}
+  .pv{display:block!important;width:100%;padding:0!important;height:440px;position:relative;overflow:hidden;font-family:Pretendard,sans-serif;text-align:left;word-break:keep-all}
+  .pv h4{white-space:nowrap}
+  .pv nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 26px;font-size:11px;white-space:nowrap;position:relative;z-index:3}
+  .pv nav b{font-size:14px}
+  .pv nav span{opacity:.85;word-spacing:10px}
+  .pv nav em{font-style:normal;word-spacing:0;opacity:1}
+  .pv img{display:block;object-fit:cover;width:100%;height:100%}
+  .sw{display:flex;gap:6px;margin-top:8px}
+  .sw i{width:18px;height:18px;border-radius:50%;display:block;border:1px solid rgba(0,0,0,.1)}
+  .card-body p{margin:4px 0 0}
+  .ab{position:absolute;overflow:hidden}
+
+  /* 1 회사소개 */
+  .t1{background:#fff;color:#0f1f3d}
+  .t1 .hero{left:0;right:0;top:0;height:290px}
+  .t1 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,27,56,.95) 0%,rgba(12,27,56,.8) 42%,rgba(12,27,56,.15) 100%)}
+  .t1 nav{color:#fff}
+  .t1 nav em{border:1px solid rgba(255,255,255,.6);padding:6px 13px;border-radius:2px}
+  .t1 .txt{position:absolute;left:26px;top:72px;z-index:2;color:#fff}
+  .t1 .k{font-size:11px;color:#7fa7ff;font-weight:700;letter-spacing:.15em}
+  .t1 h4{font-size:30px;font-weight:800;line-height:1.3;margin:8px 0 10px}
+  .t1 .s{font-size:12px;color:#c3cde0}
+  .t1 .stats{position:absolute;left:26px;top:242px;z-index:3;background:#fff;display:flex;box-shadow:0 10px 30px rgba(15,31,61,.15)}
+  .t1 .stats div{padding:14px 22px;border-right:1px solid #e6eaf2;font-size:10px;color:#6b7891}
+  .t1 .stats strong{display:block;font-size:22px;color:#0f1f3d;font-weight:800}
+  .t1 .biz{position:absolute;left:26px;right:26px;bottom:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .t1 .biz div{position:relative;height:72px;overflow:hidden}
+  .t1 .biz div::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(12,27,56,.75),transparent 70%)}
+  .t1 .biz b{position:absolute;left:10px;bottom:8px;z-index:1;color:#fff;font-size:12px}
+
+  /* 2 병의원 */
+  .t2{background:#f6fbfa;color:#1d2b2a}
+  .t2 nav{background:#fff;border-bottom:1px solid #e3f0ed}
+  .t2 nav em{background:#1aa58a;color:#fff;padding:7px 14px;border-radius:30px;font-weight:700}
+  .t2 .txt{position:absolute;left:26px;top:86px;z-index:2}
+  .t2 .k{font-size:11px;color:#1aa58a;font-weight:700}
+  .t2 h4{font-size:26px;font-weight:600;line-height:1.4;margin:8px 0 12px}
+  .t2 h4 em{font-style:normal;color:#1aa58a}
+  .t2 .s{font-size:12px;color:#5f7773;line-height:1.6}
+  .t2 .hours{margin-top:14px;background:#fff;border:1px solid #d9eeea;border-radius:12px;padding:10px 14px;font-size:11px;color:#3c5551;line-height:1.7}
+  .t2 .hours b{color:#1aa58a}
+  .t2 .main{right:180px;top:62px;width:230px;height:340px;border-radius:130px 130px 18px 18px}
+  .t2 .doc{right:26px;top:90px;width:160px;background:#fff;border-radius:16px;padding:10px;box-shadow:0 10px 24px rgba(26,165,138,.15);z-index:2;overflow:visible}
+  .t2 .doc .ph{height:100px;border-radius:10px;overflow:hidden}
+  .t2 .doc b{display:block;font-size:12px;margin-top:8px}
+  .t2 .doc small{font-size:10px;color:#6b8580}
+  .t2 .room{right:40px;bottom:24px;width:150px;height:110px;border-radius:14px;border:5px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+
+  /* 3 법률세무 */
+  .t3{background:#13291f;color:#e9e3d2}
+  .t3 nav{color:#c9b27a;border-bottom:1px solid #2a4436}
+  .t3 nav em{border:1px solid #c9b27a;padding:6px 13px}
+  .t3 .txt{position:absolute;left:26px;top:84px;z-index:2}
+  .t3 .k{font-size:10px;letter-spacing:.35em;color:#c9b27a}
+  .t3 h4{font-family:'Noto Serif KR',serif;font-weight:700;font-size:32px;line-height:1.45;margin:14px 0 14px}
+  .t3 .ln{width:40px;height:1px;background:#c9b27a;margin-bottom:12px}
+  .t3 .s{font-size:12px;color:#a9b3a8;line-height:1.7}
+  .t3 .frame{right:46px;top:76px;width:40%;height:230px;border:1px solid #c9b27a;overflow:visible}
+  .t3 .frame .in{position:absolute;left:-16px;top:-16px;right:16px;bottom:16px;overflow:hidden}
+  .t3 .frame img{filter:sepia(.15) brightness(.95)}
+  .t3 .areas{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #2a4436}
+  .t3 .areas div{padding:16px 20px;border-right:1px solid #2a4436;font-size:13px;font-weight:600}
+  .t3 .areas span{display:block;font-family:'Noto Serif KR',serif;color:#c9b27a;font-size:11px;margin-bottom:4px}
+
+  /* 4 인테리어 */
+  .t4{background:#f3efe8;color:#1b1b1b}
+  .t4 nav{background:#f3efe8}
+  .t4 nav em{border-bottom:1px solid #1b1b1b;padding-bottom:2px}
+  .t4 .main{left:26px;top:52px;width:68%;bottom:26px}
+  .t4 .side1{right:26px;top:52px;width:calc(32% - 72px);height:170px}
+  .t4 .side2{right:26px;bottom:26px;width:calc(32% - 72px);height:180px}
+  .t4 .box{position:absolute;left:46px;bottom:46px;background:#fff;padding:18px 22px;z-index:2}
+  .t4 .k{font-size:9px;letter-spacing:.3em;color:#8a7b63}
+  .t4 h4{font-size:22px;font-weight:300;line-height:1.35;margin:6px 0 0}
+  .t4 h4 b{font-weight:700}
+  .t4 .cnt{position:absolute;right:26px;top:236px;width:calc(32% - 72px);font-size:11px;color:#8a7b63;letter-spacing:.1em}
+  .t4 .cnt strong{display:block;font-size:26px;color:#1b1b1b;letter-spacing:0;font-weight:300}
+
+  /* 5 필라테스헬스 v3 */
+  .t5{background:#fff;color:#18213a}
+  .t5 nav em{background:#ff6a3d;color:#fff;padding:7px 14px;border-radius:30px;font-weight:700}
+  .t5 .txt{position:absolute;left:26px;top:68px;z-index:2}
+  .t5 .k{display:inline-block;background:#d4f53c;font-size:11px;font-weight:800;padding:5px 10px;border-radius:30px}
+  .t5 h4{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:46px;line-height:1.05;margin:12px 0 12px}
+  .t5 h4 span{color:#ff6a3d}
+  .t5 .s{font-size:12px;color:#5b6480;line-height:1.6}
+  .t5 .btns{margin-top:14px;display:flex;gap:8px}
+  .t5 .btns span{font-size:12px;font-weight:700;padding:10px 16px;border-radius:30px}
+  .t5 .b1{background:#ff6a3d;color:#fff}
+  .t5 .b2{border:1.5px solid #18213a}
+  .t5 .g{position:absolute;right:26px;top:56px;width:52%;height:300px;display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:1fr 1fr;gap:10px}
+  .t5 .g div{border-radius:20px;overflow:hidden;position:relative}
+  .t5 .g div:first-child{grid-row:span 2}
+  .t5 .stk{position:absolute;z-index:3;font-weight:800;font-size:12px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2}
+  .t5 .stk1{right:46%;top:250px;width:84px;height:84px;background:#d4f53c;color:#18213a;transform:rotate(-10deg)}
+  .t5 .band{position:absolute;left:0;right:0;bottom:0;height:52px;background:#ff6a3d;color:#fff;display:flex;align-items:center;gap:28px;padding:0 26px;font-family:'Black Han Sans',sans-serif;font-size:20px;white-space:nowrap}
+  .t5 .band i{font-style:normal;color:#d4f53c}
+
+  /* 6 펜션 (확정) */
+  .t6{background:#fffaf0;color:#2f4a3a}
+  .t6 .hero{left:0;right:0;top:0;height:300px}
+  .t6 .hero img{filter:brightness(1.3) saturate(1.05) contrast(.95)}
+  .t6 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 30%)}
+  .t6 nav{color:#2f4a3a;background:rgba(255,250,240,.9)}
+  .t6 nav em{background:#f6c453;color:#2f4a3a;padding:7px 14px;border-radius:30px;font-weight:700}
+  .t6 .box{position:absolute;left:26px;top:150px;z-index:2;background:rgba(255,250,240,.94);padding:20px 24px;border-radius:4px 40px 4px 4px}
+  .t6 .k{font-size:11px;color:#7fa98a;font-weight:700;letter-spacing:.1em}
+  .t6 h4{font-family:'Gowun Batang',serif;font-weight:700;font-size:28px;margin:6px 0 6px;line-height:1.3}
+  .t6 .s{font-size:11px;color:#6b7d70}
+  .t6 .row{position:absolute;left:26px;right:26px;bottom:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .t6 .row div{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 6px 16px rgba(47,74,58,.12)}
+  .t6 .row img{height:86px}
+  .t6 .row b{display:block;font-size:11px;padding:7px 10px;font-weight:600}
+
+  /* 7 꽃집공방 (확정) */
+  .t7{background:#fbf1ec;color:#5a3e3a}
+  .t7 nav em{border:1.5px solid #5a3e3a;padding:6px 13px;border-radius:30px;font-weight:700}
+  .t7 .txt{position:absolute;left:26px;top:80px;z-index:2}
+  .t7 .hw{font-family:'Nanum Pen Script',cursive;font-size:34px;color:#d9798a;line-height:1}
+  .t7 h4{font-size:30px;font-weight:700;margin:8px 0 12px;line-height:1.35}
+  .t7 .s{font-size:12px;color:#8a6c66;line-height:1.6}
+  .t7 .chips{display:flex;gap:6px;margin-top:14px}
+  .t7 .chips span{background:#fff;font-size:11px;padding:6px 11px;border-radius:30px;border:1px solid #f0d6d6}
+  .t7 .btn{display:inline-block;margin-top:14px;background:#d9798a;color:#fff;font-size:12px;font-weight:700;padding:10px 18px;border-radius:30px}
+  .t7 .p1{right:170px;top:56px;width:230px;height:300px;border-radius:120px 120px 12px 12px}
+  .t7 .p2{right:26px;top:150px;width:200px;height:200px;border-radius:12px;border:6px solid #fff;box-shadow:0 10px 24px rgba(90,62,58,.18);transform:rotate(3deg)}
+  .t7 .p3{right:300px;bottom:22px;width:120px;height:120px;border-radius:50%;border:5px solid #fff}
+  .t7 .tag{position:absolute;right:60px;top:122px;z-index:3;font-family:'Nanum Pen Script',cursive;font-size:24px;background:#fff7c9;padding:2px 12px;transform:rotate(-5deg);box-shadow:0 3px 8px rgba(0,0,0,.08)}
+
+  /* 8 스튜디오 */
+  .t8{background:#0a0a0a;color:#f1f1f1}
+  .t8 nav{color:#aaa}
+  .t8 nav b{color:#fff;letter-spacing:.2em}
+  .t8 nav em{color:#fff;border-bottom:1px solid #fff;padding-bottom:2px}
+  .t8 .grid{position:absolute;left:26px;right:26px;top:52px;bottom:70px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;grid-template-rows:1fr 1fr;gap:6px}
+  .t8 .grid div{overflow:hidden;position:relative}
+  .t8 .grid div:nth-child(1){grid-row:span 2}
+  .t8 .grid div:nth-child(4){grid-row:span 2}
+  .t8 .grid img{filter:saturate(.85)}
+  .t8 .foot{position:absolute;left:26px;right:26px;bottom:18px;display:flex;justify-content:space-between;align-items:flex-end}
+  .t8 h4{font-size:24px;font-weight:200;letter-spacing:.02em;margin:0}
+  .t8 h4 b{font-weight:700}
+  .t8 .cats{font-size:10px;letter-spacing:.4em;color:#999}
+</style>
+
+<h2>사진을 넣은 8개 시안 견본</h2>
+<p class="subtitle">6·7번은 지난번 그대로 두고, 같은 방식으로 1~4·8번에 사진을 넣었습니다. 5번은 더 밝은 사진 4장 모음 + 주황 띠로 방향을 바꿨습니다. 사진은 Unsplash 무료 사진을 견본용으로 불러왔습니다.</p>
+
+<div class="cards mb" data-multiselect>
+
+  <div class="card" data-choice="t1" onclick="toggleSelect(this)">
+    <div class="card-image pv t1">
+      <div class="ab hero"><img src="https://images.unsplash.com/photo-1598299803204-b73796f43289?w=1400&q=70&auto=format&fit=crop" alt=""></div>
+      <nav><b>한결정밀</b><span>회사소개 사업분야 설비 인증 <em>견적 문의</em></span></nav>
+      <div class="txt"><div class="k">SINCE 1998 · PRECISION PARTS</div><h4>정밀 부품,<br>27년의 기준을 만듭니다</h4><div class="s">자동차 · 반도체 장비 · 의료기기 부품 가공</div></div>
+      <div class="stats"><div><strong>27년</strong>업력</div><div><strong>340+</strong>거래처</div><div><strong>0.01mm</strong>가공 정밀도</div><div><strong>ISO 9001</strong>품질 인증</div></div>
+      <div class="biz">
+        <div><img src="https://images.unsplash.com/photo-1666634157070-6fd830fb5672?w=500&q=70&auto=format&fit=crop" alt=""><b>CNC 선반 가공</b></div>
+        <div><img src="https://images.unsplash.com/photo-1548683726-203119be6a39?w=500&q=70&auto=format&fit=crop" alt=""><b>플랜지 · 금형</b></div>
+        <div><img src="https://images.unsplash.com/photo-1769147339214-076740872485?w=500&q=70&auto=format&fit=crop" alt=""><b>설계 · 시제품</b></div>
+      </div>
+    </div>
+    <div class="card-body"><h3>1. 회사소개 · 단단한 신뢰</h3><p>공장 사진에 남색 그라데이션, 실적 숫자 상자, 사업분야 사진 3장.</p><div class="sw"><i style="background:#0f1f3d"></i><i style="background:#7fa7ff"></i><i style="background:#fff"></i></div></div>
+  </div>
+
+  <div class="card" data-choice="t2" onclick="toggleSelect(this)">
+    <div class="card-image pv t2">
+      <nav><b>맑은숲 피부과</b><span>진료안내 의료진 시설 오시는길 <em>진료 예약</em></span></nav>
+      <div class="ab main"><img src="https://images.unsplash.com/photo-1728727217834-b190862837a3?w=700&q=70&auto=format&fit=crop" alt=""></div>
+      <div class="ab doc"><div class="ph"><img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=400&q=70&auto=format&fit=crop" alt=""></div><b>김서윤 대표원장</b><small>피부과 전문의 · 15년</small></div>
+      <div class="ab room"><img src="https://images.unsplash.com/photo-1762625570087-6d98fca29531?w=400&q=70&auto=format&fit=crop" alt=""></div>
+      <div class="txt"><div class="k">피부과 전문의 진료</div><h4>피부가 편안해지는<br><em>정직한 진료</em></h4><div class="s">여드름 · 색소 · 리프팅 · 피부질환</div>
+        <div class="hours"><b>평일</b> 09:30 - 19:00 &nbsp; <b>토</b> 09:30 - 14:00<br>점심 13:00 - 14:00 · 일요일 휴진</div></div>
+    </div>
+    <div class="card-body"><h3>2. 병·의원 · 깨끗한 안심</h3><p>웃는 얼굴 아치 사진, 의료진 카드, 대기실 사진, 진료시간 상자.</p><div class="sw"><i style="background:#f6fbfa"></i><i style="background:#1aa58a"></i><i style="background:#1d2b2a"></i></div></div>
+  </div>
+
+  <div class="card" data-choice="t3" onclick="toggleSelect(this)">
+    <div class="card-image pv t3">
+      <nav><b>법무법인 정연</b><span>소개 업무분야 구성원 성공사례 <em>상담 예약</em></span></nav>
+      <div class="txt"><div class="k">LAW FIRM JEONGYEON</div><h4>의뢰인의 내일을<br>끝까지 지킵니다</h4><div class="ln"></div><div class="s">대표변호사 직접 상담 · 첫 상담 30분 무료</div></div>
+      <div class="ab frame"><div class="in"><img src="https://images.unsplash.com/photo-1758518731462-d091b0b4ed0d?w=800&q=70&auto=format&fit=crop" alt=""></div></div>
+      <div class="areas"><div><span>01</span>민사 · 손해배상</div><div><span>02</span>형사 · 고소대리</div><div><span>03</span>이혼 · 상속</div><div><span>04</span>기업 · 계약 검토</div></div>
+    </div>
+    <div class="card-body"><h3>3. 법률·세무 · 묵직한 품격</h3><p>짙은 녹색 + 금색 테두리 사진, 명조 제목, 업무분야 4칸.</p><div class="sw"><i style="background:#13291f"></i><i style="background:#c9b27a"></i><i style="background:#e9e3d2"></i></div></div>
+  </div>
+
+  <div class="card" data-choice="t4" onclick="toggleSelect(this)">
+    <div class="card-image pv t4">
+      <nav><b>STUDIO ONDO</b><span>PORTFOLIO PROCESS ABOUT <em>상담 신청</em></span></nav>
+      <div class="ab main"><img src="https://images.unsplash.com/photo-1724582586529-62622e50c0b3?w=1200&q=70&auto=format&fit=crop" alt=""></div>
+      <div class="ab side1"><img src="https://images.unsplash.com/photo-1643949915134-73a4c880f7c7?w=500&q=70&auto=format&fit=crop" alt=""></div>
+      
+      <div class="ab side2"><img src="https://images.unsplash.com/photo-1705326701287-346fc37a2c86?w=500&q=70&auto=format&fit=crop" alt=""></div>
+      <div class="box"><div class="k">APARTMENT · 34PY · 완료한 공간 128곳</div><h4>머물고 싶은 집,<br><b>온도를 설계합니다</b></h4></div>
+    </div>
+    <div class="card-body"><h3>4. 인테리어 · 매거진</h3><p>큰 거실 사진 + 주방·거실 사진 2장, 흰 글상자, 시공 건수.</p><div class="sw"><i style="background:#f3efe8"></i><i style="background:#8a7b63"></i><i style="background:#1b1b1b"></i></div></div>
+  </div>
+
+  <div class="card" data-choice="t5" onclick="toggleSelect(this)">
+    <div class="card-image pv t5">
+      <nav><b>MOVE LAB</b><span>프로그램 코치 가격 후기 <em>체험 신청</em></span></nav>
+      <div class="txt"><span class="k">우리 동네 운동 친구</span><h4>오늘,<br><span>움직이면</span><br>달라져요</h4><div class="s">필라테스 · 1:1 PT · 그룹 수업<br>평일 06:00 - 23:00 · 주말 09:00 - 18:00</div>
+        <div class="btns"><span class="b1">무료 체험 예약</span><span class="b2">가격 보기</span></div></div>
+      <div class="g">
+        <div><img src="https://images.unsplash.com/photo-1518310790390-836058cb000b?w=700&q=70&auto=format&fit=crop" alt=""></div>
+        <div><img src="https://images.unsplash.com/photo-1747239685045-fcbcf98985db?w=500&q=70&auto=format&fit=crop" alt=""></div>
+        <div><img src="https://images.unsplash.com/photo-1787647089631-6f13cb22e072?w=500&q=70&auto=format&fit=crop" alt=""></div>
+      </div>
+      <div class="stk stk1">첫 체험<br>무료!</div>
+      <div class="band">PILATES <i>✦</i> PERSONAL TRAINING <i>✦</i> GROUP CLASS <i>✦</i> DIET CARE <i>✦</i> PILATES</div>
+    </div>
+    <div class="card-body"><h3>5. 필라테스·헬스 · 밝은 에너지 (다시)</h3><p>흰 바탕, 밝은 운동 사진 3장 모음, 연두 동그라미 딱지, 주황 띠 글씨.</p><div class="sw"><i style="background:#fff"></i><i style="background:#ff6a3d"></i><i style="background:#d4f53c"></i><i style="background:#18213a"></i></div></div>
+  </div>
+
+  <div class="card" data-choice="t6" onclick="toggleSelect(this)">
+    <div class="card-image pv t6">
+      <div class="ab hero"><img src="https://images.unsplash.com/photo-1595877244574-e90ce41ce089?w=1400&q=70&auto=format&fit=crop" alt=""></div>
+      <nav><b>숲결 스테이</b><span>객실 바비큐 주변여행 <em>예약 문의</em></span></nav>
+      <div class="box"><div class="k">GAPYEONG · 독채 4동</div><h4>햇살 좋은 숲속 독채</h4><div class="s">개별 바비큐 · 계곡 5분 · 반려견 동반</div></div>
+      <div class="row">
+        <div><img src="https://images.unsplash.com/photo-1612152605347-f93296cb657d?w=600&q=70&auto=format&fit=crop" alt=""><b>포근한 객실</b></div>
+        <div><img src="https://images.unsplash.com/photo-1561394496-290eee5c9454?w=600&q=70&auto=format&fit=crop" alt=""><b>개별 바비큐</b></div>
+        <div><img src="https://images.unsplash.com/photo-1595521624992-48a59aef95e3?w=600&q=70&auto=format&fit=crop" alt=""><b>숲속 산책로</b></div>
+      </div>
+    </div>
+    <div class="card-body"><h3>6. 펜션·숙소 · 화사한 여행 (확정)</h3><p>밝은 숲 사진 + 크림색 바탕, 햇살 노란색 버튼, 객실·바비큐 사진 카드.</p><div class="sw"><i style="background:#fffaf0"></i><i style="background:#7fa98a"></i><i style="background:#f6c453"></i><i style="background:#2f4a3a"></i></div></div>
+  </div>
+
+  <div class="card" data-choice="t7" onclick="toggleSelect(this)">
+    <div class="card-image pv t7">
+      <nav><b>꽃담 공방</b><span>꽃다발 클래스 주문안내 <em>클래스 신청</em></span></nav>
+      <div class="ab p1"><img src="https://images.unsplash.com/photo-1533793241176-a270e75ef2ad?w=600&q=70&auto=format&fit=crop" alt=""></div>
+      <div class="ab p2"><img src="https://images.unsplash.com/photo-1782061932586-c8a425a67e3f?w=600&q=70&auto=format&fit=crop" alt=""></div>
+      <div class="ab p3"><img src="https://images.unsplash.com/photo-1782061932407-d0469f5772dc?w=400&q=70&auto=format&fit=crop" alt=""></div>
+      <div class="tag">원데이 클래스 ♡</div>
+      <div class="txt"><div class="hw">오늘의 꽃</div><h4>내 손으로 만드는<br>첫 꽃다발</h4><div class="s">꽃다발 주문 제작 · 원데이 클래스<br>4인 소수정예로 천천히 알려 드려요</div>
+        <div class="chips"><span>토 14:00</span><span>2시간</span><span>재료 포함</span></div><span class="btn">클래스 둘러보기</span></div>
+    </div>
+    <div class="card-body"><h3>7. 꽃집·공방 · 사진으로 와닿게 (확정)</h3><p>꽃다발 아치 사진 + 수업 폴라로이드 + 손글씨 쪽지, 수업 정보 칩.</p><div class="sw"><i style="background:#fbf1ec"></i><i style="background:#d9798a"></i><i style="background:#fff7c9"></i><i style="background:#5a3e3a"></i></div></div>
+  </div>
+
+  <div class="card" data-choice="t8" onclick="toggleSelect(this)">
+    <div class="card-image pv t8">
+      <nav><b>FRAME 24</b><span>WORKS FILM ABOUT <em>BOOKING</em></span></nav>
+      <div class="grid">
+        <div><img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?w=700&q=70&auto=format&fit=crop" alt=""></div>
+        <div><img src="https://images.unsplash.com/photo-1684598273404-2d94d7a7ce2f?w=400&q=70&auto=format&fit=crop" alt=""></div>
+        <div><img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=400&q=70&auto=format&fit=crop" alt=""></div>
+        <div><img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=70&auto=format&fit=crop" alt=""></div>
+        <div><img src="https://images.unsplash.com/photo-1590086782792-42dd2350140d?w=400&q=70&auto=format&fit=crop" alt=""></div>
+        <div><img src="https://images.unsplash.com/photo-1772442088907-463f166cf1f2?w=400&q=70&auto=format&fit=crop" alt=""></div>
+      </div>
+      <div class="foot"><h4>순간을 <b>오래 남기는</b> 사진</h4><div class="cats">WEDDING · PROFILE · FILM</div></div>
+    </div>
+    <div class="card-body"><h3>8. 사진·영상 스튜디오 · 작품 중심</h3><p>검은 바탕에 웨딩·프로필 사진 6장 격자, 글은 아래에 작게.</p><div class="sw"><i style="background:#0a0a0a"></i><i style="background:#999"></i><i style="background:#f1f1f1"></i></div></div>
+  </div>
+
+</div>
